@@ -14,6 +14,8 @@
   --red: #f87171;
   --yellow: #fbbf24;
   --radius: 12px;
+  --header-bg: rgba(15, 17, 23, 0.85);
+  --blue-tint: rgba(96, 165, 250, 0.35);
 }
 
 body {
@@ -30,7 +32,7 @@ code { background: var(--surface); padding: 0.1rem 0.4rem; border-radius: 4px; f
 
 /* ─── Header ─────────────────────────────────────────────────────────────── */
 header {
-  background: rgba(15, 17, 23, 0.85);
+  background: var(--header-bg);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--border);
@@ -126,7 +128,7 @@ section { margin-bottom: 3rem; }
 .stat-card:hover {
   transform: translateY(-3px);
   box-shadow: 0 8px 24px rgba(0,0,0,0.35);
-  border-color: rgba(96,165,250,0.35);
+  border-color: var(--blue-tint);
 }
 .stat-label {
   font-size: 0.75rem;
