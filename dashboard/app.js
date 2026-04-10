@@ -25,13 +25,13 @@
 
   function statusBadge(status) {
     const map = {
-      pass: ['badge-pass', '✅ PASS'],
-      fail: ['badge-fail', '❌ FAIL'],
-      'manual-check-required': ['badge-manual', '⚠️ Manual Check'],
-      captcha: ['badge-manual', '⚠️ CAPTCHA'],
-      skipped: ['badge-skip', '⏭ Skipped'],
+      pass: ['badge-pass', 'Pass'],
+      fail: ['badge-fail', 'Fail'],
+      'manual-check-required': ['badge-manual', 'Review'],
+      captcha: ['badge-manual', 'CAPTCHA'],
+      skipped: ['badge-skip', 'Skipped'],
     };
-    const [cls, label] = map[status] || ['badge-skip', status.toUpperCase()];
+    const [cls, label] = map[status] || ['badge-skip', status];
     return `<span class="badge ${cls}">${label}</span>`;
   }
 
@@ -57,7 +57,7 @@
 
   function renderSteps(steps) {
     if (!steps || steps.length === 0) {
-      return '<p style="color:var(--faint);font-size:.85rem">No steps recorded.</p>';
+      return '<p style="color:var(--text-tertiary);font-size:.8125rem">No steps recorded.</p>';
     }
     const rows = steps.map(s => `
       <tr class="step-row ${escapeHtml(s.status)}">
@@ -92,16 +92,18 @@
           <div class="flow-meta">
             ${statusBadge(flow.status)}
             <span class="duration">${formatDuration(flow.durationMs)}</span>
-            <span class="chevron">▾</span>
+            <svg class="chevron" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
           </div>
         </div>
         <div id="${detailId}" class="flow-detail">
           <div class="flow-info">
-            <span>🌐 <a href="${escapeHtml(flow.url)}" target="_blank">${escapeHtml(flow.url)}</a></span>
-            <span>🕐 Started: ${escapeHtml(flow.startedAt)}</span>
-            <span>🕑 Finished: ${escapeHtml(flow.finishedAt)}</span>
+            <span><a href="${escapeHtml(flow.url)}" target="_blank">${escapeHtml(flow.url)}</a></span>
+            <span>Started ${escapeHtml(flow.startedAt)}</span>
+            <span>Finished ${escapeHtml(flow.finishedAt)}</span>
           </div>
-          ${flow.errorMessage ? `<div class="error-box">⛔ ${escapeHtml(flow.errorMessage)}</div>` : ''}
+          ${flow.errorMessage ? `<div class="error-box">${escapeHtml(flow.errorMessage)}</div>` : ''}
           ${flow.screenshotPath ? `<div class="screenshot-box"><img src="${escapeHtml(flow.screenshotPath)}" alt="screenshot" loading="lazy" /></div>` : ''}
           ${renderSteps(flow.steps)}
         </div>
