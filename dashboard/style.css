@@ -177,6 +177,7 @@ section { margin-bottom: 3rem; }
 .stat-card.pass .stat-value { color: var(--green); }
 .stat-card.fail .stat-value { color: var(--red); }
 .stat-card.manual .stat-value { color: var(--amber); }
+.stat-card.partial .stat-value { color: #fb923c; }
 
 /* ─── Progress Bar ───────────────────────────────────────────────────────── */
 .progress-container { margin-bottom: 0; }
@@ -240,6 +241,7 @@ section { margin-bottom: 3rem; }
 
 .flow-card.fail { border-left: 2px solid var(--red); }
 .flow-card.manual-check-required { border-left: 2px solid var(--amber); }
+.flow-card.partially-loaded { border-left: 2px solid #fb923c; }
 .flow-card.pass { border-left: 2px solid transparent; }
 
 .flow-header {
@@ -398,6 +400,13 @@ section { margin-bottom: 3rem; }
   border: 1px solid var(--border-strong);
 }
 .badge-skip::before { background: var(--text-tertiary); }
+
+.badge-partial {
+  background: rgba(251, 146, 60, 0.1);
+  color: #fb923c;
+  border: 1px solid rgba(251, 146, 60, 0.3);
+}
+.badge-partial::before { background: #fb923c; }
 
 /* ─── Empty State ────────────────────────────────────────────────────────── */
 .empty-state {
