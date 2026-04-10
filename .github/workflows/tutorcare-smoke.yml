@@ -1,0 +1,65 @@
+name: TutorCare Daily Smoke Test
+
+# ── Triggers ──────────────────────────────────────────────────────────────────
+on:
+  schedule:
+    - cron: '0 6 * * *'   # 06:00 UTC every day
+  workflow_dispatch:
+    inputs:
+      config:
+        description: 'Config file to run (relative to repo root)'
+        required: false
+        default: 'config/tutorcare-homepage.json'
+
+# ── Job ───────────────────────────────────────────────────────────────────────
+jobs:
+  smoke-test:
+    name: TutorCare Smoke Test
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+
+    # To add more sites later, duplicate this job (or extract it into a
+    # reusable workflow) and point SMOKE_CONFIG at the new config file.
+    env:
+      SMOKE_CONFIG: ${{ github.event.inputs.config || 'config/tutorcare-homepage.json' }}
+
+    steps:
+      # ── Checkout ──────────────────────────────────────────────────────────
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # ── Node.js ───────────────────────────────────────────────────────────
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      # ── Install dependencies ───────────────────────────────────────────────
+      - name: Install npm dependencies
+        run: npm ci
+
+      # ── Install Playwright Chromium ────────────────────────────────────────
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      # ── Build TypeScript ───────────────────────────────────────────────────
+      - name: Build TypeScript
+        run: npm run build
+
+      # ── Run smoke test ─────────────────────────────────────────────────────
+      - name: Run smoke test
+        run: node dist/runner.js --config "$SMOKE_CONFIG"
+
+      # ── Upload artifacts ───────────────────────────────────────────────────
+      - name: Upload reports and screenshots
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: tutorcare-smoke-${{ github.run_number }}
+          path: |
+            reports/
+            screenshots/
+          retention-days: 30
