@@ -6,7 +6,7 @@ import path from 'path';
 import { chromium, firefox, webkit, Browser, BrowserContext, Page } from 'playwright';
 import { SuiteConfig, FlowConfig, FlowResult, StepResult, SuiteResult, FlowStatus, StepStatus } from './types';
 import { detectCaptcha } from './captchaDetector';
-import { resolveLocator, scrollToLocator, OPTIONAL_FIELD_TIMEOUT_MS } from './formHelpers';
+import { resolveLocator, scrollToLocator, safeCheckbox, OPTIONAL_FIELD_TIMEOUT_MS } from './formHelpers';
 import { ensureDir, slugify, nowISO, sleep, writeJson, projectPath } from './utils';
 
 // ─── Runner ────────────────────────────────────────────────────────────────────
@@ -306,17 +306,14 @@ async function fillField(
   switch (field.type) {
     case 'checkbox':
     case 'radio': {
-      const el = resolveLocator(page, field.selector);
-      try {
-        await el.waitFor({ state: 'visible', timeout: field.optional ? optionalTimeout : timeout });
-      } catch {
-        if (field.optional) return true;
-        throw new Error(`Field not visible: ${field.selector}`);
-      }
-      const checked = await el.isChecked();
-      const shouldCheck = field.value === 'true' || field.value === '1' || field.value === 'checked';
-      if (shouldCheck && !checked) await el.check();
-      if (!shouldCheck && checked) await el.uncheck();
+      const skippedCheck = await safeCheckbox(
+        page,
+        field.selector,
+        field.value === 'true' || field.value === '1' || field.value === 'checked',
+        timeout,
+        field.optional,
+      );
+      if (skippedCheck) return true;
       break;
     }
     case 'select': {
@@ -411,6 +408,7 @@ function buildFlowResult(
     flowId: flow.id,
     flowName: flow.name,
     tags: flow.tags ?? [],
+    siteId: flow.siteId,
     url: flow.url,
     status,
     steps,

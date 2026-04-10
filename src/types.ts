@@ -61,6 +61,9 @@ export interface FlowConfig {
   name: string;
   /** Tags used to filter / group tests */
   tags?: string[];
+  /** Site identifier used to group flows in multi-site reports and to filter with --site.
+   *  Convention: use the lowercase site slug, e.g. "tutorcare". */
+  siteId?: string;
   /** Starting URL */
   url: string;
   /** Expected page <title> or heading text */
@@ -123,6 +126,7 @@ export interface FlowResult {
   flowId: string;
   flowName: string;
   tags: string[];
+  siteId?: string;
   url: string;
   status: FlowStatus;
   steps: StepResult[];
