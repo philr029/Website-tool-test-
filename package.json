@@ -7,6 +7,7 @@
     "build": "tsc",
     "test": "node dist/runner.js",
     "test:config": "node dist/runner.js --config",
+    "test:tutorcare": "node dist/runner.js --config config/tutorcare-homepage.json",
     "dev": "ts-node src/runner.ts",
     "dev:config": "ts-node src/runner.ts --config",
     "report": "node dist/reporter.js",
