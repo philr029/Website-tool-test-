@@ -30,6 +30,7 @@
       'manual-check-required': ['badge-manual', 'Review'],
       captcha: ['badge-manual', 'CAPTCHA'],
       skipped: ['badge-skip', 'Skipped'],
+      'partially-loaded': ['badge-partial', 'Partial'],
     };
     const [cls, label] = map[status] || ['badge-skip', status];
     return `<span class="badge ${cls}">${label}</span>`;
@@ -49,6 +50,7 @@
     document.getElementById('val-pass').textContent = pass;
     document.getElementById('val-fail').textContent = fail;
     document.getElementById('val-manual').textContent = manual;
+    document.getElementById('val-partial').textContent = suite.totals?.partiallyLoaded ?? 0;
     document.getElementById('val-duration').textContent = formatDuration(suite.durationMs);
     document.getElementById('val-browser').textContent = suite.browser ?? '—';
     document.getElementById('pass-rate-label').textContent = passRate + '%';

@@ -5,7 +5,13 @@
 export type FieldType = 'text' | 'email' | 'password' | 'tel' | 'number' | 'textarea' | 'select' | 'checkbox' | 'radio' | 'file';
 
 export interface FormField {
-  /** CSS selector or label text for the field */
+  /** CSS selector or label text for the field.
+   *  Supports special prefixes handled by resolveLocator:
+   *    label:<text>       → page.getByLabel(text, { exact: false })
+   *    placeholder:<text> → page.getByPlaceholder(text, { exact: false })
+   *    text:<text>        → page.getByText(text, { exact: false })
+   *    (anything else)    → page.locator(selector)
+   */
   selector: string;
   /** Type of the form field */
   type: FieldType;
@@ -13,6 +19,8 @@ export interface FormField {
   value: string;
   /** Optional: wait (ms) before interacting with this field */
   waitBefore?: number;
+  /** If true, skip this field gracefully when the element is not found or not visible */
+  optional?: boolean;
 }
 
 export interface ClickAction {
@@ -24,11 +32,16 @@ export interface ClickAction {
   waitAfter?: number;
   /** If true, the click opens a new tab/page — runner will follow it */
   newTab?: boolean;
+  /** Mark this click as the form's submit action.
+   *  When the parent flow has validateOnly: true, submit actions are skipped. */
+  isSubmit?: boolean;
 }
 
 export interface FormStep {
   /** Optional name for the step shown in reports */
   name?: string;
+  /** Scroll to this selector (supports label:/placeholder:/text: prefixes) before processing the step */
+  scrollTo?: string;
   /** Fields to fill in this step */
   fields?: FormField[];
   /** Buttons/links to click in this step */
@@ -64,6 +77,13 @@ export interface FlowConfig {
   screenshotOnFailure?: boolean;
   /** Take a screenshot on success */
   screenshotOnSuccess?: boolean;
+  /** Fill and interact with all fields but skip any click marked isSubmit: true.
+   *  Use this to verify form availability without generating real submissions.
+   *  Default: false */
+  validateOnly?: boolean;
+  /** Permit actual form submission. Only takes effect when validateOnly is false.
+   *  Default: false — forms are never submitted unless this is explicitly true. */
+  submit?: boolean;
 }
 
 export interface SuiteConfig {
@@ -88,7 +108,7 @@ export interface SuiteConfig {
 // ─── Result Types ──────────────────────────────────────────────────────────────
 
 export type StepStatus = 'pass' | 'fail' | 'captcha' | 'skipped';
-export type FlowStatus = 'pass' | 'fail' | 'manual-check-required';
+export type FlowStatus = 'pass' | 'fail' | 'manual-check-required' | 'partially-loaded';
 
 export interface StepResult {
   stepIndex: number;
@@ -124,6 +144,7 @@ export interface SuiteResult {
     pass: number;
     fail: number;
     manualCheckRequired: number;
+    partiallyLoaded: number;
   };
   flows: FlowResult[];
 }

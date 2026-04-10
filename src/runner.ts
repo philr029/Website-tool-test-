@@ -6,6 +6,7 @@ import path from 'path';
 import { chromium, firefox, webkit, Browser, BrowserContext, Page } from 'playwright';
 import { SuiteConfig, FlowConfig, FlowResult, StepResult, SuiteResult, FlowStatus, StepStatus } from './types';
 import { detectCaptcha } from './captchaDetector';
+import { resolveLocator, scrollToLocator, OPTIONAL_FIELD_TIMEOUT_MS } from './formHelpers';
 import { ensureDir, slugify, nowISO, sleep, writeJson, projectPath } from './utils';
 
 // ─── Runner ────────────────────────────────────────────────────────────────────
@@ -50,6 +51,7 @@ export async function runSuite(config: SuiteConfig): Promise<SuiteResult> {
     pass: flowResults.filter((r) => r.status === 'pass').length,
     fail: flowResults.filter((r) => r.status === 'fail').length,
     manualCheckRequired: flowResults.filter((r) => r.status === 'manual-check-required').length,
+    partiallyLoaded: flowResults.filter((r) => r.status === 'partially-loaded').length,
   };
 
   const suiteResult: SuiteResult = {
@@ -119,6 +121,7 @@ async function executeFlow(
   let overallStatus: FlowStatus = 'pass';
   let errorMessage: string | undefined;
   let screenshotPath: string | undefined;
+  let hasOptionalSkips = false;
 
   console.log(`\n▶ Flow: ${flow.name} (${flow.url})`);
 
@@ -179,9 +182,24 @@ async function executeFlow(
           break;
         }
 
+        // Scroll to a landmark element before processing the step
+        if (step.scrollTo) {
+          await scrollToLocator(page, step.scrollTo, timeout);
+        }
+
         // Process clicks
         if (step.clicks) {
           for (const click of step.clicks) {
+            // Skip submit actions when in validate-only mode (flow.validateOnly is true) or
+            // when explicit submission has not been enabled (flow.submit !== true).
+            // Both conditions must be clear of restrictions before a submit click is allowed,
+            // providing a safety-first default: forms are never submitted unless you
+            // explicitly set validateOnly: false AND submit: true.
+            if (click.isSubmit && (flow.validateOnly || !flow.submit)) {
+              console.log(`  │  ⏭ Skipping submit (validate_only mode): ${click.description ?? click.selector}`);
+              continue;
+            }
+
             await performClick(page, click, timeout);
             if (click.waitAfter) await sleep(click.waitAfter);
 
@@ -206,7 +224,11 @@ async function executeFlow(
         if (step.fields) {
           for (const field of step.fields) {
             if (field.waitBefore) await sleep(field.waitBefore);
-            await fillField(page, field, timeout);
+            const skipped = await fillField(page, field, timeout);
+            if (skipped) {
+              hasOptionalSkips = true;
+              console.log(`  │  ⏭ Optional field skipped (not visible): ${field.selector}`);
+            }
           }
         }
 
@@ -247,6 +269,11 @@ async function executeFlow(
     if (overallStatus === 'pass' && flow.screenshotOnSuccess) {
       screenshotPath = await captureScreenshot(page, screenshotDir, `${flow.id}-final-pass`);
     }
+
+    // Downgrade pass → partially-loaded when optional fields were skipped
+    if (overallStatus === 'pass' && hasOptionalSkips) {
+      overallStatus = 'partially-loaded';
+    }
   } catch (err) {
     overallStatus = 'fail';
     errorMessage = err instanceof Error ? err.message : String(err);
@@ -265,12 +292,27 @@ async function executeFlow(
 
 // ─── Field & Click Helpers ─────────────────────────────────────────────────────
 
-async function fillField(page: Page, field: { selector: string; type: string; value: string }, timeout: number): Promise<void> {
+/**
+ * Fill a single form field. Returns true when the field was skipped because it
+ * is marked optional and was not visible within the timeout.
+ */
+async function fillField(
+  page: Page,
+  field: { selector: string; type: string; value: string; optional?: boolean },
+  timeout: number,
+): Promise<boolean> {
+  const optionalTimeout = Math.min(timeout, OPTIONAL_FIELD_TIMEOUT_MS);
+
   switch (field.type) {
     case 'checkbox':
     case 'radio': {
-      const el = page.locator(field.selector).first();
-      await el.waitFor({ state: 'visible', timeout });
+      const el = resolveLocator(page, field.selector);
+      try {
+        await el.waitFor({ state: 'visible', timeout: field.optional ? optionalTimeout : timeout });
+      } catch {
+        if (field.optional) return true;
+        throw new Error(`Field not visible: ${field.selector}`);
+      }
       const checked = await el.isChecked();
       const shouldCheck = field.value === 'true' || field.value === '1' || field.value === 'checked';
       if (shouldCheck && !checked) await el.check();
@@ -278,8 +320,13 @@ async function fillField(page: Page, field: { selector: string; type: string; va
       break;
     }
     case 'select': {
-      const sel = page.locator(field.selector).first();
-      await sel.waitFor({ state: 'visible', timeout });
+      const sel = resolveLocator(page, field.selector);
+      try {
+        await sel.waitFor({ state: 'visible', timeout: field.optional ? optionalTimeout : timeout });
+      } catch {
+        if (field.optional) return true;
+        throw new Error(`Field not visible: ${field.selector}`);
+      }
       await sel.selectOption({ label: field.value });
       break;
     }
@@ -288,13 +335,19 @@ async function fillField(page: Page, field: { selector: string; type: string; va
       await page.setInputFiles(field.selector, field.value);
       break;
     default: {
-      const input = page.locator(field.selector).first();
-      await input.waitFor({ state: 'visible', timeout });
+      const input = resolveLocator(page, field.selector);
+      try {
+        await input.waitFor({ state: 'visible', timeout: field.optional ? optionalTimeout : timeout });
+      } catch {
+        if (field.optional) return true;
+        throw new Error(`Field not visible: ${field.selector}`);
+      }
       await input.fill('');
       await input.fill(field.value);
       break;
     }
   }
+  return false;
 }
 
 async function performClick(page: Page, click: { selector: string; description?: string; newTab?: boolean }, timeout: number): Promise<void> {
@@ -372,14 +425,18 @@ function buildFlowResult(
 // ─── Console Output ────────────────────────────────────────────────────────────
 
 function printFlowSummary(result: FlowResult): void {
-  const icon = result.status === 'pass' ? '✅' : result.status === 'manual-check-required' ? '⚠️ ' : '❌';
+  const icon =
+    result.status === 'pass' ? '✅' :
+    result.status === 'manual-check-required' ? '⚠️ ' :
+    result.status === 'partially-loaded' ? '🔶' :
+    '❌';
   console.log(`  ${icon} ${result.flowName} — ${result.status.toUpperCase()} (${result.durationMs}ms)`);
 }
 
 function printSuiteSummary(suite: SuiteResult): void {
   console.log(`\n╔══════════════════════════════════════════════════╗`);
   console.log(`║  Suite: ${suite.suiteName}`);
-  console.log(`║  Total: ${suite.totals.total} | ✅ Pass: ${suite.totals.pass} | ❌ Fail: ${suite.totals.fail} | ⚠️  Manual: ${suite.totals.manualCheckRequired}`);
+  console.log(`║  Total: ${suite.totals.total} | ✅ Pass: ${suite.totals.pass} | ❌ Fail: ${suite.totals.fail} | ⚠️  Manual: ${suite.totals.manualCheckRequired} | 🔶 Partial: ${suite.totals.partiallyLoaded}`);
   console.log(`║  Duration: ${suite.durationMs}ms`);
   console.log(`╚══════════════════════════════════════════════════╝\n`);
 }
