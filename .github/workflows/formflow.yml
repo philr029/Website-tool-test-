@@ -55,8 +55,13 @@ jobs:
       # ── Run tests ────────────────────────────────────────────────────────────
       - name: Run FormFlow tests
         run: |
-          CONFIG="${{ github.event.inputs.config || 'config/default.json' }}"
-          node dist/index.js --config "$CONFIG"
+          if [ "${{ github.event_name }}" = "schedule" ]; then
+            # Daily scheduled run: execute the default suite and the TutorCare smoke test
+            node dist/index.js --config config/default.json --config config/tutorcare-homepage.json
+          else
+            CONFIG="${{ github.event.inputs.config || 'config/default.json' }}"
+            node dist/index.js --config "$CONFIG"
+          fi
         env:
           # Secrets are never hard-coded. Pass them here as environment variables.
           TEST_USERNAME: ${{ secrets.TEST_USERNAME }}

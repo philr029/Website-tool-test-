@@ -65,6 +65,7 @@ function statusBadge(status: string): string {
     'manual-check-required': 'badge-manual',
     captcha: 'badge-manual',
     skipped: 'badge-skip',
+    'partially-loaded': 'badge-partial',
   };
   const labels: Record<string, string> = {
     pass: '✅ PASS',
@@ -72,6 +73,7 @@ function statusBadge(status: string): string {
     'manual-check-required': '⚠️ Manual Check',
     captcha: '⚠️ CAPTCHA',
     skipped: '⏭ Skipped',
+    'partially-loaded': '🔶 Partial',
   };
   const cls = map[status] ?? 'badge-skip';
   const label = labels[status] ?? status.toUpperCase();
@@ -171,6 +173,7 @@ function buildHtml(suite: SuiteResult): string {
     .card.pass .value { color: #4ade80; }
     .card.fail .value { color: #f87171; }
     .card.manual .value { color: #fbbf24; }
+    .card.partial .value { color: #fb923c; }
     .card.total .value { color: #60a5fa; }
     .card .sub { font-size: 0.8rem; color: #94a3b8; margin-top: 0.1rem; }
 
@@ -184,6 +187,7 @@ function buildHtml(suite: SuiteResult): string {
     .flow-card { background: #1e293b; border: 1px solid #334155; border-radius: 12px; margin-bottom: 0.75rem; overflow: hidden; }
     .flow-card.fail { border-color: #7f1d1d; }
     .flow-card.manual-check-required { border-color: #78350f; }
+    .flow-card.partially-loaded { border-color: #9a3412; }
     .flow-header { display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.25rem; cursor: pointer; transition: background 0.15s; }
     .flow-header:hover { background: rgba(255,255,255,0.03); }
     .flow-title { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
@@ -213,6 +217,7 @@ function buildHtml(suite: SuiteResult): string {
     .badge-pass { background: #14532d33; color: #4ade80; border: 1px solid #14532d; }
     .badge-fail { background: #7f1d1d33; color: #f87171; border: 1px solid #7f1d1d; }
     .badge-manual { background: #78350f33; color: #fbbf24; border: 1px solid #78350f; }
+    .badge-partial { background: #9a341233; color: #fb923c; border: 1px solid #9a3412; }
     .badge-skip { background: #1e293b; color: #64748b; border: 1px solid #334155; }
     .no-steps { color: #64748b; font-size: 0.85rem; padding: 0.5rem 0; }
 
@@ -236,6 +241,7 @@ function buildHtml(suite: SuiteResult): string {
     <div class="card pass"><div class="label">Passed</div><div class="value">${suite.totals.pass}</div><div class="sub">${passRate}% pass rate</div></div>
     <div class="card fail"><div class="label">Failed</div><div class="value">${suite.totals.fail}</div></div>
     <div class="card manual"><div class="label">Manual Check</div><div class="value">${suite.totals.manualCheckRequired}</div></div>
+    <div class="card partial"><div class="label">Partial</div><div class="value">${suite.totals.partiallyLoaded}</div></div>
     <div class="card total"><div class="label">Duration</div><div class="value" style="font-size:1.4rem">${formatDuration(suite.durationMs)}</div></div>
   </div>
 
