@@ -76,7 +76,7 @@
             {
               "selector": "label:Message",
               "type": "textarea",
-              "value": "Automated smoke test — please disregard. This message confirms field interactability only and was not submitted."
+              "value": "Automated smoke test — please disregard. This message confirms field interactivity only and was not submitted."
             }
           ]
         },

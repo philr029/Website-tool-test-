@@ -70,7 +70,7 @@ async function main(): Promise<void> {
         const flowSite = (flow.siteId ?? '').toLowerCase();
 
         const tagMatch = tagFilters.length === 0 || tagFilters.some((t) => flowTags.includes(t));
-        const siteMatch = siteFilters.length === 0 || siteFilters.includes(flowSite) || siteFilters.some((s) => flowTags.includes(s));
+        const siteMatch = siteFilters.length === 0 || siteFilters.includes(flowSite);
 
         return tagMatch && siteMatch;
       });

@@ -91,7 +91,7 @@ flows:
             type: textarea
             value: >-
               Automated smoke test — please disregard.
-              This message confirms field interactability only and was not submitted.
+              This message confirms field interactivity only and was not submitted.
 
       # ── Step 4: Handle required checkboxes ────────────────────────────────
       #   Uses safeCheckbox internally — will gracefully skip if not found when
