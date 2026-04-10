@@ -30,7 +30,9 @@ code { background: var(--surface); padding: 0.1rem 0.4rem; border-radius: 4px; f
 
 /* ─── Header ─────────────────────────────────────────────────────────────── */
 header {
-  background: linear-gradient(135deg, var(--surface) 0%, var(--surface2) 100%);
+  background: rgba(15, 17, 23, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--border);
   position: sticky;
   top: 0;
@@ -73,10 +75,16 @@ nav a:hover { color: var(--text); text-decoration: none; }
 .btn-outline:hover { border-color: var(--blue); color: var(--blue) !important; }
 
 /* ─── Main ───────────────────────────────────────────────────────────────── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
 main {
   max-width: 1200px;
   margin: 0 auto;
   padding: 2rem;
+  animation: fadeUp 0.4s ease both;
 }
 
 section { margin-bottom: 3rem; }
@@ -113,9 +121,13 @@ section { margin-bottom: 3rem; }
   border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: 1.25rem 1.5rem;
-  transition: transform 0.15s;
+  transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
 }
-.stat-card:hover { transform: translateY(-2px); }
+.stat-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+  border-color: rgba(96,165,250,0.35);
+}
 .stat-label {
   font-size: 0.75rem;
   color: var(--muted);
@@ -177,7 +189,11 @@ section { margin-bottom: 3rem; }
   border: 1px solid var(--border);
   border-radius: var(--radius);
   overflow: hidden;
-  transition: border-color 0.15s;
+  transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+}
+.flow-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.3);
 }
 .flow-card.pass:hover { border-color: #166534; }
 .flow-card.fail { border-color: #7f1d1d; }
@@ -299,10 +315,10 @@ section { margin-bottom: 3rem; }
   padding: 0.5rem 1.25rem;
   font-size: 0.9rem;
   cursor: pointer;
-  transition: opacity 0.15s;
+  transition: filter 0.15s, transform 0.15s;
   margin-top: 0.5rem;
 }
-.btn:hover { opacity: 0.85; text-decoration: none; }
+.btn:hover { filter: brightness(1.12); transform: translateY(-1px); text-decoration: none; }
 
 /* ─── Footer ─────────────────────────────────────────────────────────────── */
 footer {
@@ -321,4 +337,15 @@ footer {
   .stat-grid { grid-template-columns: repeat(2, 1fr); }
   .section-header { flex-direction: column; align-items: flex-start; }
   .flow-meta .duration { display: none; }
+  .filter-bar {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    flex-wrap: nowrap;
+    padding-bottom: 4px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  main { animation: none; }
+  .stat-card, .flow-card, .btn { transition: none; }
 }

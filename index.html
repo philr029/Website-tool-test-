@@ -186,6 +186,19 @@
       50% { opacity: 0.4; }
     }
 
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+      .hero-badge   { animation: fadeUp 0.5s ease 0.1s both; }
+      #hero h1      { animation: fadeUp 0.5s ease 0.2s both; }
+      #hero > .container > p { animation: fadeUp 0.5s ease 0.3s both; }
+      .hero-actions { animation: fadeUp 0.5s ease 0.4s both; }
+      .hero-stats   { animation: fadeUp 0.5s ease 0.5s both; }
+    }
+
     #hero h1 {
       font-size: clamp(2.6rem, 6vw, 4.2rem);
       font-weight: 800;
