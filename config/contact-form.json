@@ -1,0 +1,51 @@
+{
+  "suiteName": "Contact Form Test Suite",
+  "browser": "chromium",
+  "headless": true,
+  "viewport": { "width": 1280, "height": 800 },
+  "reportDir": "reports",
+  "screenshotDir": "screenshots",
+  "flows": [
+    {
+      "id": "contact-form-basic",
+      "name": "Basic Contact Form Submission",
+      "tags": ["contact", "form"],
+      "url": "https://httpbin.org/forms/post",
+      "expectedText": "Customer name",
+      "screenshotOnFailure": true,
+      "screenshotOnSuccess": false,
+      "retries": 1,
+      "timeout": 30000,
+      "steps": [
+        {
+          "name": "Fill contact fields",
+          "fields": [
+            { "selector": "input[name='custname']", "type": "text", "value": "Jane Smith" },
+            { "selector": "input[name='custtel']", "type": "tel", "value": "555-0100" },
+            { "selector": "input[name='custemail']", "type": "email", "value": "jane@example.com" },
+            { "selector": "textarea[name='comments']", "type": "textarea", "value": "Hello! This is an automated test message." }
+          ]
+        },
+        {
+          "name": "Select pizza size",
+          "fields": [
+            { "selector": "select[name='size']", "type": "select", "value": "Large" }
+          ]
+        },
+        {
+          "name": "Choose topping",
+          "fields": [
+            { "selector": "input[name='topping'][value='cheese']", "type": "checkbox", "value": "true" }
+          ]
+        },
+        {
+          "name": "Submit form",
+          "clicks": [
+            { "selector": "button[type='submit'], input[type='submit']", "description": "Submit button", "waitAfter": 2000 }
+          ],
+          "screenshot": true
+        }
+      ]
+    }
+  ]
+}

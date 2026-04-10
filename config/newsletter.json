@@ -1,0 +1,37 @@
+{
+  "suiteName": "Newsletter Signup Test Suite",
+  "browser": "chromium",
+  "headless": true,
+  "viewport": { "width": 1280, "height": 800 },
+  "reportDir": "reports",
+  "screenshotDir": "screenshots",
+  "flows": [
+    {
+      "id": "newsletter-signup",
+      "name": "Newsletter Signup Flow",
+      "tags": ["newsletter", "email", "form"],
+      "url": "https://httpbin.org/forms/post",
+      "screenshotOnFailure": true,
+      "screenshotOnSuccess": false,
+      "retries": 1,
+      "timeout": 30000,
+      "steps": [
+        {
+          "name": "Enter email for newsletter",
+          "fields": [
+            { "selector": "input[name='custemail']", "type": "email", "value": "subscriber@example.com" },
+            { "selector": "input[name='custname']", "type": "text", "value": "Newsletter Subscriber" },
+            { "selector": "textarea[name='comments']", "type": "textarea", "value": "Please add me to your newsletter." }
+          ]
+        },
+        {
+          "name": "Submit newsletter signup",
+          "clicks": [
+            { "selector": "button[type='submit'], input[type='submit']", "description": "Subscribe button", "waitAfter": 2000 }
+          ],
+          "screenshot": true
+        }
+      ]
+    }
+  ]
+}

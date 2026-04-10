@@ -1,0 +1,50 @@
+{
+  "suiteName": "Login Page Smoke Test",
+  "browser": "chromium",
+  "headless": true,
+  "viewport": { "width": 1280, "height": 800 },
+  "reportDir": "reports",
+  "screenshotDir": "screenshots",
+  "flows": [
+    {
+      "id": "login-smoke-test",
+      "name": "Login Page Smoke Test",
+      "tags": ["login", "smoke", "auth"],
+      "url": "https://the-internet.herokuapp.com/login",
+      "expectedTitle": "The Internet",
+      "expectedText": "Login",
+      "screenshotOnFailure": true,
+      "screenshotOnSuccess": false,
+      "retries": 1,
+      "timeout": 30000,
+      "steps": [
+        {
+          "name": "Verify login page loads",
+          "expectedText": "Login Page"
+        },
+        {
+          "name": "Fill credentials from environment",
+          "fields": [
+            {
+              "selector": "#username",
+              "type": "text",
+              "value": "${TEST_USERNAME:-tomsmith}"
+            },
+            {
+              "selector": "#password",
+              "type": "password",
+              "value": "${TEST_PASSWORD:-SuperSecretPassword!}"
+            }
+          ]
+        },
+        {
+          "name": "Submit login",
+          "clicks": [
+            { "selector": "button[type='submit']", "description": "Login button", "waitAfter": 2000 }
+          ],
+          "screenshot": false
+        }
+      ]
+    }
+  ]
+}
