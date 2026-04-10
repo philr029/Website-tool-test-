@@ -9,7 +9,7 @@ on:
       config:
         description: 'Config file to run (relative to repo root)'
         required: false
-        default: 'config/tutorcare-homepage.json'
+        default: 'config/sites/tutorcare/homepage.json'
 
 # ── Job ───────────────────────────────────────────────────────────────────────
 jobs:
@@ -23,7 +23,7 @@ jobs:
     # To add more sites later, duplicate this job (or extract it into a
     # reusable workflow) and point SMOKE_CONFIG at the new config file.
     env:
-      SMOKE_CONFIG: ${{ github.event.inputs.config || 'config/tutorcare-homepage.json' }}
+      SMOKE_CONFIG: ${{ github.event.inputs.config || 'config/sites/tutorcare/homepage.json' }}
 
     steps:
       # ── Checkout ──────────────────────────────────────────────────────────

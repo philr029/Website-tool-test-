@@ -1,0 +1,100 @@
+{
+  "suiteName": "TutorCare Daily Smoke Test",
+  "browser": "chromium",
+  "headless": true,
+  "viewport": { "width": 1280, "height": 900 },
+  "reportDir": "reports",
+  "screenshotDir": "screenshots",
+  "flows": [
+    {
+      "id": "tutorcare-enquiry-form",
+      "name": "TutorCare — Homepage Enquiry Form",
+      "siteId": "tutorcare",
+      "tags": ["smoke", "tutorcare", "daily", "contact-form"],
+      "url": "https://tutorcare.co.uk",
+      "expectedTitle": "TutorCare",
+      "expectedText": "Enquire Now",
+      "validateOnly": true,
+      "submit": false,
+      "screenshotOnFailure": true,
+      "screenshotOnSuccess": true,
+      "retries": 2,
+      "timeout": 45000,
+      "steps": [
+        {
+          "name": "Verify page title contains TutorCare and enquiry section is present",
+          "expectedText": "Enquire Now",
+          "waitAfter": 1000
+        },
+        {
+          "name": "Scroll to and fill personal details",
+          "scrollTo": "text:Enquire Now",
+          "waitAfter": 500,
+          "fields": [
+            {
+              "selector": "label:First Name",
+              "type": "text",
+              "value": "Test"
+            },
+            {
+              "selector": "label:Last Name",
+              "type": "text",
+              "value": "Smoke"
+            },
+            {
+              "selector": "label:Email",
+              "type": "email",
+              "value": "smoke-test@formflow-tester.invalid"
+            },
+            {
+              "selector": "label:Telephone",
+              "type": "tel",
+              "value": "07700000000"
+            }
+          ]
+        },
+        {
+          "name": "Select enquirer type and fill organisation details",
+          "fields": [
+            {
+              "selector": "label:Individual",
+              "type": "radio",
+              "value": "true",
+              "optional": true
+            },
+            {
+              "selector": "label:Organisation Name",
+              "type": "text",
+              "value": "FormFlow Test Org",
+              "optional": true
+            }
+          ]
+        },
+        {
+          "name": "Fill enquiry message",
+          "fields": [
+            {
+              "selector": "label:Message",
+              "type": "textarea",
+              "value": "Automated smoke test — please disregard. This message confirms field interactability only and was not submitted."
+            }
+          ]
+        },
+        {
+          "name": "Tick required Terms & Conditions checkbox",
+          "fields": [
+            {
+              "selector": "label:terms",
+              "type": "checkbox",
+              "value": "true"
+            }
+          ]
+        },
+        {
+          "name": "Confirm form is ready for submission (validate_only — no submit action performed)",
+          "screenshot": true
+        }
+      ]
+    }
+  ]
+}

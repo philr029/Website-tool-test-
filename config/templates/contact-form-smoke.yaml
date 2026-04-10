@@ -1,0 +1,113 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# FormFlow Tester — Contact Form Smoke Test Template
+#
+# Copy this file into config/sites/<your-site>/ and fill in every value marked
+# with <REPLACE>. The template shows the canonical contact-form smoke test
+# pattern used across all sites.
+#
+# Naming convention
+#   config/sites/<siteId>/<page>.json   (JSON preferred for production configs)
+#   config/templates/*                 (YAML preferred here for inline docs)
+#
+# To add a new site:
+#   1. mkdir config/sites/<siteId>
+#   2. cp config/templates/contact-form-smoke.yaml config/sites/<siteId>/contact.json
+#      (or .yaml — both formats are supported)
+#   3. Fill in all <REPLACE> placeholders
+#   4. Add  "test:<siteId>": "node dist/index.js --config config/sites/<siteId>/contact.json"
+#      to package.json scripts
+#   5. Add the site to .github/workflows/smoke.yml (or its own workflow file)
+# ─────────────────────────────────────────────────────────────────────────────
+
+suiteName: "<REPLACE> Contact Form Smoke Test"
+browser: chromium
+headless: true
+viewport:
+  width: 1280
+  height: 900
+reportDir: reports
+screenshotDir: screenshots
+
+flows:
+  - id: "<REPLACE>-contact-form"          # e.g. acme-contact-form
+    name: "<REPLACE> — Contact Form"      # e.g. Acme — Contact Form
+    siteId: "<REPLACE>"                   # lowercase slug, e.g. acme
+    tags:
+      - smoke
+      - "<REPLACE>"                       # same as siteId, e.g. acme
+      - daily
+      - contact-form
+
+    url: "<REPLACE>"                      # e.g. https://example.com/contact
+
+    # Optional: assert the page title contains this string
+    expectedTitle: "<REPLACE>"
+
+    # Optional: assert this text is visible on the landing page
+    expectedText: "<REPLACE>"             # e.g. the heading of the contact section
+
+    # Safety flags — keep validateOnly:true and submit:false for smoke tests.
+    # Only set submit:true when you explicitly want a real submission to occur.
+    validateOnly: true
+    submit: false
+
+    screenshotOnFailure: true
+    screenshotOnSuccess: true
+    retries: 1
+    timeout: 45000
+
+    steps:
+      # ── Step 1: Verify the contact section is present ──────────────────────
+      - name: "Verify contact section is present"
+        expectedText: "<REPLACE>"         # e.g. "Get in touch" or "Contact us"
+        waitAfter: 1000
+
+      # ── Step 2: Scroll to form and fill core personal fields ───────────────
+      - name: "Scroll to and fill personal details"
+        scrollTo: "text:<REPLACE>"        # visible heading text near the form
+        waitAfter: 500
+        fields:
+          # Selectors use label: / placeholder: / text: prefixes for stability.
+          # CSS selectors are also supported for sites without accessible labels.
+          - selector: "label:First Name"
+            type: text
+            value: "Test"
+          - selector: "label:Last Name"
+            type: text
+            value: "Smoke"
+          - selector: "label:Email"
+            type: email
+            value: "smoke-test@formflow-tester.invalid"
+          - selector: "label:Phone"
+            type: tel
+            value: "07700000000"
+            optional: true              # mark optional fields so they don't fail
+                                        # when not present on this particular form
+
+      # ── Step 3: Fill the message / enquiry body ────────────────────────────
+      - name: "Fill enquiry message"
+        fields:
+          - selector: "label:Message"
+            type: textarea
+            value: >-
+              Automated smoke test — please disregard.
+              This message confirms field interactability only and was not submitted.
+
+      # ── Step 4: Handle required checkboxes ────────────────────────────────
+      #   Uses safeCheckbox internally — will gracefully skip if not found when
+      #   optional: true.
+      - name: "Accept terms and conditions"
+        fields:
+          - selector: "label:terms"      # adjust to the site's label text
+            type: checkbox
+            value: "true"
+            optional: true              # set false if T&C is always required
+
+      # ── Step 5: Confirm the form looks ready (no submit in validateOnly) ───
+      - name: "Confirm form ready for submission (validate_only — skipping submit)"
+        screenshot: true
+        # To add a real submit button (skipped in validateOnly mode):
+        # clicks:
+        #   - selector: "button[type=submit]"
+        #     description: "Submit contact form"
+        #     isSubmit: true

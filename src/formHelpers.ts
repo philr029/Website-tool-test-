@@ -76,3 +76,35 @@ export async function isLocatorVisible(page: Page, selector: string, timeout: nu
     return false;
   }
 }
+
+// ─── Safe Checkbox / Radio ─────────────────────────────────────────────────────
+
+/**
+ * Safely check or uncheck a checkbox or radio button identified by `selector`.
+ *
+ * - When `optional` is true and the element is not visible within
+ *   {@link OPTIONAL_FIELD_TIMEOUT_MS}, the call returns `true` (skipped) instead
+ *   of throwing.
+ * - When `optional` is false and the element is not visible, an error is thrown.
+ *
+ * @returns `true` when the field was skipped (optional + not visible), `false` otherwise.
+ */
+export async function safeCheckbox(
+  page: Page,
+  selector: string,
+  shouldCheck: boolean,
+  timeout: number,
+  optional = false,
+): Promise<boolean> {
+  const el = resolveLocator(page, selector);
+  try {
+    await el.waitFor({ state: 'visible', timeout: optional ? OPTIONAL_FIELD_TIMEOUT_MS : timeout });
+  } catch {
+    if (optional) return true;
+    throw new Error(`Field not visible: ${selector}`);
+  }
+  const checked = await el.isChecked();
+  if (shouldCheck && !checked) await el.check();
+  if (!shouldCheck && checked) await el.uncheck();
+  return false;
+}
