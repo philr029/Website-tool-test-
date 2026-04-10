@@ -1,0 +1,54 @@
+suiteName: Multi-Step Lead Form Test
+browser: chromium
+headless: true
+viewport:
+  width: 1280
+  height: 800
+reportDir: reports
+screenshotDir: screenshots
+
+flows:
+  - id: multi-step-lead-form
+    name: Multi-Step Lead Form
+    tags:
+      - lead
+      - multi-step
+      - form
+    url: https://httpbin.org/forms/post
+    screenshotOnFailure: true
+    retries: 1
+    timeout: 30000
+    steps:
+      - name: "Step 1 - Personal Info"
+        fields:
+          - selector: "input[name='custname']"
+            type: text
+            value: "John Doe"
+          - selector: "input[name='custemail']"
+            type: email
+            value: "john.doe@example.com"
+          - selector: "input[name='custtel']"
+            type: tel
+            value: "555-0199"
+        screenshot: false
+
+      - name: "Step 2 - Preferences"
+        fields:
+          - selector: "select[name='size']"
+            type: select
+            value: Medium
+          - selector: "input[name='topping'][value='mushroom']"
+            type: checkbox
+            value: "true"
+        screenshot: false
+
+      - name: "Step 3 - Review and Submit"
+        fields:
+          - selector: "textarea[name='comments']"
+            type: textarea
+            value: "Automated multi-step test submission."
+        clicks:
+          - selector: "button[type='submit'], input[type='submit']"
+            description: Final submit button
+            waitAfter: 2000
+        screenshot: true

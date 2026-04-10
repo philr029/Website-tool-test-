@@ -1,0 +1,119 @@
+name: FormFlow Tester
+
+on:
+  # Run on every push to main / master
+  push:
+    branches: [main, master]
+  # Run on pull requests
+  pull_request:
+    branches: [main, master]
+  # Allow manual runs with a custom config path
+  workflow_dispatch:
+    inputs:
+      config:
+        description: 'Path to the suite config file (relative to repo root)'
+        required: false
+        default: 'config/default.json'
+  # Scheduled nightly run
+  schedule:
+    - cron: '0 2 * * *'   # 02:00 UTC every day
+
+jobs:
+  test:
+    name: Run FormFlow Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: write   # required for gh-pages deployment
+      pages: write      # required for GitHub Pages
+      id-token: write   # required for GitHub Pages OIDC
+
+    steps:
+      # ── Checkout ────────────────────────────────────────────────────────────
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # ── Node.js ─────────────────────────────────────────────────────────────
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      # ── Install dependencies ─────────────────────────────────────────────────
+      - name: Install npm dependencies
+        run: npm ci
+
+      # ── Install Playwright browsers ──────────────────────────────────────────
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      # ── Build TypeScript ─────────────────────────────────────────────────────
+      - name: Build TypeScript
+        run: npm run build
+
+      # ── Run tests ────────────────────────────────────────────────────────────
+      - name: Run FormFlow tests
+        run: |
+          CONFIG="${{ github.event.inputs.config || 'config/default.json' }}"
+          node dist/index.js --config "$CONFIG"
+        env:
+          # Secrets are never hard-coded. Pass them here as environment variables.
+          TEST_USERNAME: ${{ secrets.TEST_USERNAME }}
+          TEST_PASSWORD: ${{ secrets.TEST_PASSWORD }}
+          WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
+        # Allow the step to fail without failing the workflow immediately
+        # (we still want reports / screenshots to be uploaded as artifacts)
+        continue-on-error: true
+
+      # ── Generate HTML report ─────────────────────────────────────────────────
+      - name: Generate HTML report
+        if: always()
+        run: |
+          CONFIG="${{ github.event.inputs.config || 'config/default.json' }}"
+          # reporter is invoked by the runner automatically; this step is a no-op
+          # if reports already exist, but kept for clarity
+          ls -la reports/ 2>/dev/null || echo "No reports directory yet"
+
+      # ── Copy dashboard into reports for GitHub Pages ─────────────────────────
+      - name: Prepare GitHub Pages content
+        if: always()
+        run: |
+          mkdir -p reports/dashboard
+          cp dashboard/index.html reports/dashboard/
+          cp dashboard/style.css  reports/dashboard/
+          cp dashboard/app.js     reports/dashboard/
+          # Create a top-level index that redirects to the dashboard
+          cat > reports/index.html <<'EOF'
+          <!DOCTYPE html>
+          <html><head><meta charset="UTF-8"/>
+          <meta http-equiv="refresh" content="0; url=dashboard/index.html"/>
+          <title>FormFlow Tester</title></head>
+          <body>Redirecting to <a href="dashboard/index.html">dashboard</a>…</body>
+          </html>
+          EOF
+
+      # ── Upload reports as artifacts ──────────────────────────────────────────
+      - name: Upload test artifacts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: formflow-report-${{ github.run_number }}
+          path: |
+            reports/
+            screenshots/
+          retention-days: 30
+
+      # ── Deploy to GitHub Pages ───────────────────────────────────────────────
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        if: >
+          always() &&
+          github.ref == 'refs/heads/main' &&
+          github.event_name != 'pull_request'
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./reports
+          publish_branch: gh-pages
+          force_orphan: false
+          keep_files: true

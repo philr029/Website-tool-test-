@@ -1,0 +1,34 @@
+{
+  "name": "formflow-tester",
+  "version": "1.0.0",
+  "description": "Automated form and website testing tool powered by Playwright",
+  "main": "dist/runner.js",
+  "scripts": {
+    "build": "tsc",
+    "test": "node dist/runner.js",
+    "test:config": "node dist/runner.js --config",
+    "dev": "ts-node src/runner.ts",
+    "dev:config": "ts-node src/runner.ts --config",
+    "report": "node dist/reporter.js",
+    "lint": "eslint src/**/*.ts tests/**/*.ts",
+    "clean": "rm -rf dist reports screenshots"
+  },
+  "keywords": [
+    "playwright",
+    "testing",
+    "automation",
+    "forms",
+    "e2e"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "js-yaml": "^4.1.0",
+    "playwright": "^1.55.1"
+  },
+  "devDependencies": {
+    "@types/js-yaml": "^4.0.9",
+    "@types/node": "^20.12.0",
+    "typescript": "^5.4.0"
+  }
+}

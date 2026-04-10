@@ -1,0 +1,35 @@
+{
+  "suiteName": "Default Smoke Test Suite",
+  "browser": "chromium",
+  "headless": true,
+  "viewport": { "width": 1280, "height": 800 },
+  "reportDir": "reports",
+  "screenshotDir": "screenshots",
+  "flows": [
+    {
+      "id": "page-load-check",
+      "name": "Example.com Page Load Check",
+      "tags": ["smoke", "page-load"],
+      "url": "https://example.com",
+      "expectedTitle": "Example Domain",
+      "expectedText": "Example Domain",
+      "screenshotOnFailure": true,
+      "screenshotOnSuccess": false,
+      "retries": 1,
+      "timeout": 30000,
+      "steps": [
+        {
+          "name": "Verify page content",
+          "expectedText": "This domain is for use in illustrative examples"
+        },
+        {
+          "name": "Click More Information link",
+          "clicks": [
+            { "selector": "a[href='https://www.iana.org/domains/reserved']", "description": "More information link", "waitAfter": 1000 }
+          ],
+          "screenshot": false
+        }
+      ]
+    }
+  ]
+}
