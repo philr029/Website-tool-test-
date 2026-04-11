@@ -864,15 +864,24 @@
        IP / DOMAIN CHECKER
     ════════════════════════════════════════════════════════════ */
 
-    /** Validate a string as IPv4, IPv6, or a basic domain. */
+    /*
+     * Module-level IP validation patterns — defined once, reused by both
+     * isValidTarget() and renderIPResult() to avoid duplication.
+     *
+     * IPV4_RE:  validates each octet is 0-255 (rejects e.g. 999.0.0.1).
+     * IPV6_RE:  RFC 5952-conformant — accepts full (8-group), :: compressed,
+     *           link-local (fe80::), and IPv4-mapped forms.
+     * DOMAIN_RE: basic hostname.tld structure validation.
+     */
+    const _IPV4_OCTET = '(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)';
+    const IPV4_RE  = new RegExp('^(' + _IPV4_OCTET + '\\.){3}' + _IPV4_OCTET + '$');
+    /* Each alternative below covers one valid IPv6 notation: full / :: compressed / link-local / IPv4-mapped */
+    const IPV6_RE  = /^(([0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]+|::(ffff(:0{1,4})?:)?((25[0-5]|(2[0-4]|1?[0-9])?[0-9])\.){3}(25[0-5]|(2[0-4]|1?[0-9])?[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1?[0-9])?[0-9])\.){3}(25[0-5]|(2[0-4]|1?[0-9])?[0-9]))$/;
+    const DOMAIN_RE = /^[a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?(\.[a-zA-Z]{2,})+$/;
+
+    /** Return true if str is a valid IPv4, IPv6, or domain name. */
     function isValidTarget(str) {
-      // IPv4: each octet must be 0-255
-      const octet = '(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)';
-      const ipv4  = new RegExp('^(' + octet + '\\.){3}' + octet + '$');
-      // IPv6: full address (8 groups) OR compressed with :: — using a whitelist approach
-      const ipv6  = /^(([0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]+|::(ffff(:0{1,4})?:)?((25[0-5]|(2[0-4]|1?[0-9])?[0-9])\.){3}(25[0-5]|(2[0-4]|1?[0-9])?[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1?[0-9])?[0-9])\.){3}(25[0-5]|(2[0-4]|1?[0-9])?[0-9]))$/;
-      const domain = /^[a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?(\.[a-zA-Z]{2,})+$/;
-      return ipv4.test(str) || ipv6.test(str) || domain.test(str);
+      return IPV4_RE.test(str) || IPV6_RE.test(str) || DOMAIN_RE.test(str);
     }
 
     /**
@@ -958,10 +967,8 @@
 
     /** Build and show the IP/domain result panel. */
     function renderIPResult(target) {
-      const octet = '(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)';
-      const ipv4Re = new RegExp('^(' + octet + '\\.){3}' + octet + '$');
-      const ipv6Re = /^(([0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:))$/;
-      const isIP = ipv4Re.test(target) || ipv6Re.test(target);
+      /* Reuse module-level IPV4_RE and IPV6_RE constants — no local re-declaration needed */
+      const isIP = IPV4_RE.test(target) || IPV6_RE.test(target);
 
       const resultBox = document.getElementById('ip-result');
       const grid      = document.getElementById('ip-result-grid');
