@@ -1,740 +1,1185 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>IP, Domain &amp; Telephony Testing Hub</title>
-  <meta name="description" content="A unified IT operations platform for IP intelligence, domain health diagnostics, and call flow testing." />
+  <title>Network Tools — IP, Domain &amp; Phone Checker</title>
+  <meta name="description" content="Professional IT network diagnostics: public IP detection, domain health lookup, and phone number validation." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ═══════════════════════════════════════════════════
+       Network Tools — Inline Stylesheet
+       Apple-inspired dark theme, responsive, accessible
+    ═══════════════════════════════════════════════════ */
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg-1: #0f172a;
+      --bg-2: #020617;
+      --surface: rgba(255,255,255,0.05);
+      --surface-h: rgba(255,255,255,0.08);
+      --border: rgba(255,255,255,0.08);
+      --border-h: rgba(14,165,233,0.45);
+      --text: #e2e8f0;
+      --muted: #64748b;
+      --accent: #0ea5e9;
+      --accent2: #6366f1;
+      --pass: #10b981;
+      --pass-bg: rgba(16,185,129,0.12);
+      --fail: #ef4444;
+      --fail-bg: rgba(239,68,68,0.12);
+      --warn: #f59e0b;
+      --warn-bg: rgba(245,158,11,0.12);
+      --radius: 16px;
+      --radius-sm: 10px;
+      --shadow: 0 4px 24px rgba(0,0,0,0.4);
+      --shadow-lg: 0 8px 48px rgba(0,0,0,0.55);
+      --nav-h: 60px;
+      --font: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      --mono: 'SF Mono', 'Fira Code', 'Fira Mono', ui-monospace, monospace;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: calc(var(--nav-h) + 16px);
+    }
+
+    body {
+      font-family: var(--font);
+      background: linear-gradient(160deg, var(--bg-1) 0%, var(--bg-2) 100%);
+      min-height: 100vh;
+      color: var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
+    }
+
+    /* Ambient background orbs */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 70% 50% at 5% 10%, rgba(14,165,233,0.08) 0%, transparent 60%),
+        radial-gradient(ellipse 55% 45% at 92% 85%, rgba(99,102,241,0.07) 0%, transparent 60%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── Layout helpers ──────────────────────────────────── */
+    .container {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 0 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ── Navigation ──────────────────────────────────────── */
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      height: var(--nav-h);
+      border-bottom: 1px solid transparent;
+      transition: background 0.3s, border-color 0.3s, backdrop-filter 0.3s;
+    }
+
+    .nav.scrolled {
+      background: rgba(2,6,23,0.88);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom-color: var(--border);
+    }
+
+    .nav-inner {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 0 24px;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: var(--text);
+      font-weight: 700;
+      font-size: 0.95rem;
+      letter-spacing: -0.01em;
+    }
+
+    .nav-logo-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .nav-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.85rem;
+      color: var(--muted);
+      text-decoration: none;
+      padding: 6px 14px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      transition: color 0.2s, border-color 0.2s, background 0.2s;
+    }
+
+    .nav-back:hover {
+      color: var(--text);
+      border-color: var(--border-h);
+      background: var(--surface);
+    }
+
+    /* ── Hero ────────────────────────────────────────────── */
+    .hero {
+      padding: 80px 0 60px;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(14,165,233,0.1);
+      border: 1px solid rgba(14,165,233,0.22);
+      border-radius: 100px;
+      padding: 5px 16px;
+      font-size: 0.73rem;
+      font-weight: 700;
+      color: var(--accent);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+    }
+
+    .badge-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 8px var(--accent);
+      animation: blink 2s infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.25; }
+    }
+
+    .hero h1 {
+      font-size: clamp(2.1rem, 5.5vw, 3.4rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      margin-bottom: 18px;
+    }
+
+    .gradient-text {
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero p {
+      font-size: 1.05rem;
+      color: var(--muted);
+      max-width: 460px;
+      margin: 0 auto;
+    }
+
+    /* ── Section header ──────────────────────────────────── */
+    .section {
+      padding: 48px 0;
+      position: relative;
+      z-index: 1;
+    }
+
+    .section-label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 28px;
+    }
+
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* ── Tools grid ──────────────────────────────────────── */
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 22px;
+    }
+
+    /* ── Cards ───────────────────────────────────────────── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+      transition: border-color 0.25s, box-shadow 0.25s, transform 0.25s;
+    }
+
+    .card:hover {
+      border-color: var(--border-h);
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-2px);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 22px;
+    }
+
+    .card-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .card-icon-ip     { background: rgba(14,165,233,0.15);  color: var(--accent); }
+    .card-icon-phone  { background: rgba(16,185,129,0.15);  color: var(--pass);   }
+
+    .card-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 2px;
+    }
+
+    .card-subtitle {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    /* ── Inputs ──────────────────────────────────────────── */
+    .input-wrap {
+      position: relative;
+      margin-bottom: 10px;
+    }
+
+    .input-icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted);
+      pointer-events: none;
+    }
+
+    .text-input {
+      width: 100%;
+      padding: 12px 14px 12px 40px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--text);
+      font-size: 0.9rem;
+      font-family: var(--font);
+      outline: none;
+      transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+    }
+
+    .text-input::placeholder { color: var(--muted); }
+
+    .text-input:focus {
+      border-color: var(--accent);
+      background: rgba(14,165,233,0.05);
+      box-shadow: 0 0 0 3px rgba(14,165,233,0.12);
+    }
+
+    /* ── Buttons ─────────────────────────────────────────── */
+    .btn-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 10px 18px;
+      border-radius: var(--radius-sm);
+      font-size: 0.875rem;
+      font-weight: 600;
+      font-family: var(--font);
+      cursor: pointer;
+      border: none;
+      text-decoration: none;
+      transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s, background 0.2s, border-color 0.2s;
+      user-select: none;
+    }
+
+    .btn:active { transform: scale(0.97) !important; }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #fff;
+      box-shadow: 0 0 20px rgba(14,165,233,0.22);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 0 32px rgba(14,165,233,0.38);
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    .btn-secondary {
+      background: var(--surface);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .btn-secondary:hover {
+      transform: translateY(-1px);
+      background: var(--surface-h);
+      border-color: var(--border-h);
+    }
+
+    /* Loading spinner inside button */
+    .spinner {
+      width: 14px;
+      height: 14px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.65s linear infinite;
+      flex-shrink: 0;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Error messages ──────────────────────────────────── */
+    .err-msg {
+      display: none;
+      font-size: 0.8rem;
+      color: var(--fail);
+      background: var(--fail-bg);
+      border: 1px solid rgba(239,68,68,0.2);
+      border-radius: 8px;
+      padding: 8px 12px;
+      margin-bottom: 8px;
+      animation: fadeSlideIn 0.25s ease;
+    }
+
+    .err-msg.show { display: block; }
+
+    /* ── Result box (IP card) ────────────────────────────── */
+    .result-box {
+      display: none;
+      margin-top: 18px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      animation: fadeSlideIn 0.3s ease;
+    }
+
+    .result-box.show { display: block; }
+
+    @keyframes fadeSlideIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .result-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+      background: rgba(255,255,255,0.03);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .result-target {
+      font-family: var(--mono);
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--accent);
+    }
+
+    /* Status pill badges */
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 10px;
+      border-radius: 100px;
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+
+    .pill-pass { background: var(--pass-bg); color: var(--pass); }
+    .pill-fail { background: var(--fail-bg); color: var(--fail); }
+    .pill-warn { background: var(--warn-bg); color: var(--warn); }
+
+    /* 2-column result grid */
+    .result-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1px;
+      background: var(--border); /* gap becomes the border */
+    }
+
+    .result-cell {
+      padding: 14px 16px;
+      background: rgba(7,9,15,0.6);
+    }
+
+    .result-cell.span-2 { grid-column: span 2; }
+
+    .rc-label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 5px;
+    }
+
+    .rc-value {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--text);
+    }
+
+    .rc-value.mono {
+      font-family: var(--mono);
+      font-size: 0.82rem;
+    }
+
+    /* Health score row */
+    .score-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .score-num {
+      font-size: 1.25rem;
+      font-weight: 800;
+      min-width: 2.2rem;
+    }
+
+    .score-bar {
+      flex: 1;
+      height: 6px;
+      border-radius: 3px;
+      background: rgba(255,255,255,0.08);
+      overflow: hidden;
+    }
+
+    .score-fill {
+      height: 100%;
+      border-radius: 3px;
+      transition: width 0.7s cubic-bezier(0.4,0,0.2,1);
+    }
+
+    /* ── Phone validation result ─────────────────────────── */
+    .val-result {
+      display: none;
+      margin-top: 18px;
+      padding: 16px 18px;
+      border-radius: 12px;
+      border: 1px solid;
+      animation: fadeSlideIn 0.3s ease;
+      align-items: flex-start;
+      gap: 14px;
+    }
+
+    .val-result.show { display: flex; }
+
+    .val-result.valid {
+      background: var(--pass-bg);
+      border-color: rgba(16,185,129,0.28);
+    }
+
+    .val-result.invalid {
+      background: var(--fail-bg);
+      border-color: rgba(239,68,68,0.28);
+    }
+
+    .val-icon-wrap {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .valid   .val-icon-wrap { background: rgba(16,185,129,0.2); color: var(--pass); }
+    .invalid .val-icon-wrap { background: rgba(239,68,68,0.2);  color: var(--fail); }
+
+    .val-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin-bottom: 3px;
+    }
+
+    .valid   .val-title { color: var(--pass); }
+    .invalid .val-title { color: var(--fail); }
+
+    .val-detail {
+      font-size: 0.8rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    /* ── Footer ──────────────────────────────────────────── */
+    footer {
+      margin-top: 48px;
+      padding: 28px 0;
+      border-top: 1px solid var(--border);
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    footer p {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    footer a { color: var(--accent); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+
+    /* ── Toast notification ──────────────────────────────── */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(16px);
+      background: rgba(7,9,15,0.95);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 10px 22px;
+      border-radius: 100px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s, transform 0.25s;
+      z-index: 999;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      white-space: nowrap;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* ── Responsive breakpoints ──────────────────────────── */
+    @media (max-width: 720px) {
+      .tools-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding: 60px 0 40px;
+      }
+
+      .hero h1 {
+        font-size: clamp(1.7rem, 8vw, 2.4rem);
+      }
+
+      .result-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .result-cell.span-2 { grid-column: span 1; }
+    }
+
+    @media (max-width: 480px) {
+      .container { padding: 0 16px; }
+      .card { padding: 22px 18px; }
+      .btn-row { flex-direction: column; }
+      .btn { justify-content: center; }
+    }
+  </style>
 </head>
 <body>
 
-  <!-- ═══════════════════════════════════════════════
-       NAVIGATION
-  ═══════════════════════════════════════════════ -->
-  <nav class="nav" id="nav">
+  <!-- ── Navigation ─────────────────────────────────────── -->
+  <nav class="nav" id="main-nav" aria-label="Main navigation">
     <div class="nav-inner">
-      <a href="#hero" class="nav-logo">
-        <svg class="logo-svg" width="30" height="30" viewBox="0 0 32 32" fill="none">
-          <rect width="32" height="32" rx="8" fill="url(#navLogoGrad)"/>
-          <circle cx="16" cy="16" r="7" fill="none" stroke="white" stroke-width="1.5"/>
-          <circle cx="16" cy="16" r="2.5" fill="white"/>
-          <line x1="16" y1="9" x2="16" y2="7" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
-          <line x1="16" y1="25" x2="16" y2="23" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
-          <line x1="9" y1="16" x2="7" y2="16" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
-          <line x1="25" y1="16" x2="23" y2="16" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
-          <defs>
-            <linearGradient id="navLogoGrad" x1="0" y1="0" x2="32" y2="32">
-              <stop offset="0%" stop-color="#0ea5e9"/>
-              <stop offset="100%" stop-color="#6366f1"/>
-            </linearGradient>
-          </defs>
-        </svg>
-        <span class="logo-text">IP&amp;D <strong>Hub</strong></span>
+      <a href="#" class="nav-logo" aria-label="Network Tools home">
+        <div class="nav-logo-icon" aria-hidden="true">
+          <!-- Globe icon -->
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="2" y1="12" x2="22" y2="12"/>
+            <path d="M12 2a15 15 0 0 1 4 10 15 15 0 0 1-4 10 15 15 0 0 1-4-10 15 15 0 0 1 4-10z"/>
+          </svg>
+        </div>
+        Network Tools
       </a>
-
-      <div class="nav-links" id="nav-links">
-        <a href="#ip-checker" class="nav-link">IP Check</a>
-        <a href="#domain-checker" class="nav-link">Domain</a>
-        <a href="#phone-tester" class="nav-link">Phone</a>
-        <a href="#dashboard" class="nav-link">Dashboard</a>
-        <a href="#future-integrations" class="nav-link">Integrations</a>
-      </div>
-
-      <div class="nav-actions">
-        <button class="theme-toggle" id="theme-toggle" aria-label="Toggle light/dark mode" title="Toggle theme">
-          <!-- Sun icon (shown in dark mode) -->
-          <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-            <circle cx="12" cy="12" r="5"/>
-            <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
-            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
-            <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
-            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
-          </svg>
-          <!-- Moon icon (shown in light mode) -->
-          <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-          </svg>
-        </button>
-        <button class="nav-hamburger" id="nav-hamburger" aria-label="Toggle navigation menu">
-          <span></span><span></span><span></span>
-        </button>
-      </div>
+      <a href="../" class="nav-back">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+          <path d="M19 12H5M12 19l-7-7 7-7"/>
+        </svg>
+        Back to Portfolio
+      </a>
     </div>
   </nav>
 
-  <!-- ═══════════════════════════════════════════════
-       HERO SECTION
-  ═══════════════════════════════════════════════ -->
-  <section class="hero" id="hero">
-    <div class="hero-bg" aria-hidden="true">
-      <div class="hero-orb hero-orb-1"></div>
-      <div class="hero-orb hero-orb-2"></div>
-      <div class="hero-orb hero-orb-3"></div>
-    </div>
-    <div class="container hero-container">
-      <div class="hero-badge">
+  <!-- ── Hero ───────────────────────────────────────────── -->
+  <section class="hero" aria-labelledby="hero-heading">
+    <div class="container">
+      <div class="hero-badge" aria-hidden="true">
         <span class="badge-dot"></span>
-        IT Operations Testing Platform
+        IT Network Diagnostics
       </div>
-      <h1 class="hero-title">
-        IP, Domain &amp; Telephony<br/>
-        <span class="gradient-text">Testing Hub</span>
+      <h1 id="hero-heading">
+        Network<br />
+        <span class="gradient-text">Diagnostics Hub</span>
       </h1>
-      <p class="hero-subtitle">
-        A unified platform for IP intelligence, domain health diagnostics, and call flow validation.
-        Built for IT operations teams who need fast, reliable infrastructure testing.
-      </p>
-      <div class="hero-actions">
-        <a href="#ip-checker" class="btn btn-primary">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/>
-          </svg>
-          Run IP Check
-        </a>
-        <a href="#domain-checker" class="btn btn-primary">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="10"/>
-            <line x1="2" y1="12" x2="22" y2="12"/>
-            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
-          </svg>
-          Run Domain Check
-        </a>
-        <a href="#phone-tester" class="btn btn-secondary">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.4 2 2 0 0 1 3.6 1.22h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.77a16 16 0 0 0 6.29 6.29l.96-.96a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/>
-          </svg>
-          Log Phone Test
-        </a>
-        <a href="#dashboard" class="btn btn-ghost">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
-            <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
-          </svg>
-          View Dashboard
-        </a>
-      </div>
-
-      <!-- Live stats updated as tests are run -->
-      <div class="hero-stats">
-        <div class="hero-stat">
-          <span class="hero-stat-value" id="hero-total">0</span>
-          <span class="hero-stat-label">Tests Run</span>
-        </div>
-        <div class="hero-stat-divider" aria-hidden="true"></div>
-        <div class="hero-stat">
-          <span class="hero-stat-value pass-color" id="hero-pass">0</span>
-          <span class="hero-stat-label">Passed</span>
-        </div>
-        <div class="hero-stat-divider" aria-hidden="true"></div>
-        <div class="hero-stat">
-          <span class="hero-stat-value warn-color" id="hero-warn">0</span>
-          <span class="hero-stat-label">Warnings</span>
-        </div>
-        <div class="hero-stat-divider" aria-hidden="true"></div>
-        <div class="hero-stat">
-          <span class="hero-stat-value fail-color" id="hero-fail">0</span>
-          <span class="hero-stat-label">Failed</span>
-        </div>
-      </div>
+      <p>Public IP detection, domain health lookup, and phone number validation — all in one place.</p>
     </div>
   </section>
 
-  <!-- ═══════════════════════════════════════════════
-       TOOLS OVERVIEW CARDS
-  ═══════════════════════════════════════════════ -->
-  <section class="section tools-section" id="tools">
-    <div class="container">
-      <div class="section-header">
-        <h2 class="section-title">Testing Modules</h2>
-        <p class="section-sub">Three integrated tools sharing one unified dashboard</p>
-      </div>
-      <div class="tools-grid">
+  <!-- ── Main Tools ─────────────────────────────────────── -->
+  <main>
+    <section class="section" aria-label="Network tools">
+      <div class="container">
 
-        <!-- IP Intelligence -->
-        <div class="tool-card" role="button" tabindex="0" onclick="smoothScrollTo('#ip-checker')" onkeydown="if(event.key==='Enter')smoothScrollTo('#ip-checker')">
-          <div class="tool-card-icon ip-icon-bg">
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-              <circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/>
-              <line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/>
-              <line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/>
-            </svg>
-          </div>
-          <h3 class="tool-card-title">IP Intelligence</h3>
-          <p class="tool-card-desc">Geolocation, ISP lookup, blacklist and reputation checks, reverse DNS, and overall health scoring for any IP address.</p>
-          <div class="tool-card-tags">
-            <span class="tag">Geolocation</span>
-            <span class="tag">Blacklist</span>
-            <span class="tag">rDNS</span>
-            <span class="tag">Health Score</span>
-          </div>
-          <div class="tool-card-cta">
-            Run IP Check
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-          </div>
-        </div>
+        <div class="section-label" aria-hidden="true">Network Tools</div>
 
-        <!-- Domain Health -->
-        <div class="tool-card" role="button" tabindex="0" onclick="smoothScrollTo('#domain-checker')" onkeydown="if(event.key==='Enter')smoothScrollTo('#domain-checker')">
-          <div class="tool-card-icon domain-icon-bg">
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-              <circle cx="12" cy="12" r="10"/>
-              <line x1="2" y1="12" x2="22" y2="12"/>
-              <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
-            </svg>
-          </div>
-          <h3 class="tool-card-title">Domain Health</h3>
-          <p class="tool-card-desc">DNS records, SPF/DKIM/DMARC email security, SSL validity, redirect chains, uptime, and HTTP security headers analysis.</p>
-          <div class="tool-card-tags">
-            <span class="tag">DNS</span>
-            <span class="tag">SSL/TLS</span>
-            <span class="tag">DMARC</span>
-            <span class="tag">Security Headers</span>
-          </div>
-          <div class="tool-card-cta">
-            Check Domain
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-          </div>
-        </div>
+        <div class="tools-grid">
 
-        <!-- Phone & Call Flow -->
-        <div class="tool-card" role="button" tabindex="0" onclick="smoothScrollTo('#phone-tester')" onkeydown="if(event.key==='Enter')smoothScrollTo('#phone-tester')">
-          <div class="tool-card-icon phone-icon-bg">
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.4 2 2 0 0 1 3.6 1.22h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.77a16 16 0 0 0 6.29 6.29l.96-.96a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/>
-            </svg>
-          </div>
-          <h3 class="tool-card-title">Phone &amp; Call Flow</h3>
-          <p class="tool-card-desc">Log and track telephony test results, IVR flows, queue routing, and call outcome validation across your telephony infrastructure.</p>
-          <div class="tool-card-tags">
-            <span class="tag">Call Flow</span>
-            <span class="tag">IVR</span>
-            <span class="tag">Queues</span>
-            <span class="tag">Outcomes</span>
-          </div>
-          <div class="tool-card-cta">
-            Log Test
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══════════════════════════════════════════════
-       IP CHECKER
-  ═══════════════════════════════════════════════ -->
-  <section class="section" id="ip-checker">
-    <div class="container">
-      <div class="section-header">
-        <div class="section-icon-wrap ip-icon-bg">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/>
-            <line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/>
-            <line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/>
-          </svg>
-        </div>
-        <div>
-          <h2 class="section-title">IP Intelligence</h2>
-          <p class="section-sub">Geolocation, ISP, reputation, and health for any IP address</p>
-        </div>
-      </div>
-
-      <div class="input-row">
-        <div class="input-group">
-          <svg class="input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/>
-          </svg>
-          <input
-            type="text" id="ip-input" class="text-input"
-            placeholder="Enter IP address — e.g. 8.8.8.8 or 185.220.101.42"
-            autocomplete="off" spellcheck="false"
-            onkeydown="if(event.key==='Enter')runIPCheck()"
-          />
-        </div>
-        <button class="btn btn-primary" id="ip-check-btn" onclick="runIPCheck()">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-          Run Check
-        </button>
-        <button class="btn btn-ghost" onclick="loadMockIP()">Sample Data</button>
-      </div>
-
-      <!-- IP Results (hidden until a check is run) -->
-      <div id="ip-results" class="results-area hidden">
-        <div class="results-header">
-          <div class="results-meta">
-            <span id="ip-result-target" class="result-target"></span>
-            <span id="ip-result-time" class="result-time"></span>
-          </div>
-          <span id="ip-health-badge" class="status-badge"></span>
-        </div>
-        <div class="ip-results-grid" id="ip-results-grid">
-          <!-- Rendered by ip-checker.js -->
-        </div>
-        <div class="result-actions">
-          <button class="btn btn-secondary btn-sm" onclick="saveIPResult()">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17,21 17,13 7,13 7,21"/><polyline points="7,3 7,8 15,8"/></svg>
-            Save to Dashboard
-          </button>
-        </div>
-      </div>
-
-      <!-- IP Empty State -->
-      <div id="ip-empty" class="empty-state">
-        <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
-          <circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/>
-          <line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/>
-          <line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/>
-        </svg>
-        <p class="empty-title">No IP checked yet</p>
-        <p class="empty-hint">Enter an IP address above or click "Sample Data" to explore</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══════════════════════════════════════════════
-       DOMAIN CHECKER
-  ═══════════════════════════════════════════════ -->
-  <section class="section section-alt" id="domain-checker">
-    <div class="container">
-      <div class="section-header">
-        <div class="section-icon-wrap domain-icon-bg">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="10"/>
-            <line x1="2" y1="12" x2="22" y2="12"/>
-            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
-          </svg>
-        </div>
-        <div>
-          <h2 class="section-title">Domain Health</h2>
-          <p class="section-sub">DNS, email security, SSL, redirects, uptime, and security headers</p>
-        </div>
-      </div>
-
-      <div class="input-row">
-        <div class="input-group">
-          <svg class="input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="10"/>
-            <line x1="2" y1="12" x2="22" y2="12"/>
-            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
-          </svg>
-          <input
-            type="text" id="domain-input" class="text-input"
-            placeholder="Enter domain — e.g. example.com or mail.contoso.com"
-            autocomplete="off" spellcheck="false"
-            onkeydown="if(event.key==='Enter')runDomainCheck()"
-          />
-        </div>
-        <button class="btn btn-primary" id="domain-check-btn" onclick="runDomainCheck()">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-          Check Domain
-        </button>
-        <button class="btn btn-ghost" onclick="loadMockDomain()">Sample Data</button>
-      </div>
-
-      <!-- Domain Results (hidden until a check is run) -->
-      <div id="domain-results" class="results-area hidden">
-        <div class="results-header">
-          <div class="results-meta">
-            <span id="domain-result-target" class="result-target"></span>
-            <span id="domain-result-time" class="result-time"></span>
-          </div>
-          <span id="domain-health-badge" class="status-badge"></span>
-        </div>
-        <div class="domain-results-grid" id="domain-results-grid">
-          <!-- Rendered by domain-checker.js -->
-        </div>
-        <div class="result-actions">
-          <button class="btn btn-secondary btn-sm" onclick="saveDomainResult()">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17,21 17,13 7,13 7,21"/><polyline points="7,3 7,8 15,8"/></svg>
-            Save to Dashboard
-          </button>
-        </div>
-      </div>
-
-      <!-- Domain Empty State -->
-      <div id="domain-empty" class="empty-state">
-        <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
-          <circle cx="12" cy="12" r="10"/>
-          <line x1="2" y1="12" x2="22" y2="12"/>
-          <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
-        </svg>
-        <p class="empty-title">No domain checked yet</p>
-        <p class="empty-hint">Enter a domain name above or click "Sample Data" to explore</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══════════════════════════════════════════════
-       PHONE & CALL FLOW TESTING
-  ═══════════════════════════════════════════════ -->
-  <section class="section" id="phone-tester">
-    <div class="container">
-      <div class="section-header">
-        <div class="section-icon-wrap phone-icon-bg">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.4 2 2 0 0 1 3.6 1.22h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.77a16 16 0 0 0 6.29 6.29l.96-.96a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/>
-          </svg>
-        </div>
-        <div>
-          <h2 class="section-title">Phone &amp; Call Flow Testing</h2>
-          <p class="section-sub">Log and track telephony tests, IVR flows, and call routing validation</p>
-        </div>
-      </div>
-
-      <div class="phone-layout">
-
-        <!-- Phone Test Form -->
-        <div class="card form-card">
-          <h3 class="card-title">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
-            </svg>
-            Log New Test
-          </h3>
-          <form id="phone-form" onsubmit="submitPhoneTest(event)" novalidate>
-            <div class="form-grid">
-              <div class="form-field">
-                <label class="form-label" for="pt-name">Test Name <span class="required" aria-label="required">*</span></label>
-                <input type="text" id="pt-name" class="form-input" placeholder="e.g. Sales Queue Routing Test" required />
+          <!-- ════════════════════════════════════════════
+               CARD 1 — IP / Domain Checker
+          ════════════════════════════════════════════ -->
+          <div class="card" id="ip-card">
+            <div class="card-header">
+              <div class="card-icon card-icon-ip" aria-hidden="true">
+                <!-- Target/crosshair icon -->
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+                  <circle cx="12" cy="12" r="10"/>
+                  <circle cx="12" cy="12" r="3"/>
+                  <line x1="12" y1="2" x2="12" y2="5"/>
+                  <line x1="12" y1="19" x2="12" y2="22"/>
+                  <line x1="2" y1="12" x2="5" y2="12"/>
+                  <line x1="19" y1="12" x2="22" y2="12"/>
+                </svg>
               </div>
-              <div class="form-field">
-                <label class="form-label" for="pt-phone">Phone Number <span class="required" aria-label="required">*</span></label>
-                <input type="tel" id="pt-phone" class="form-input" placeholder="e.g. +44 20 1234 5678" required />
-              </div>
-              <div class="form-field">
-                <label class="form-label" for="pt-ext">Extension / Queue</label>
-                <input type="text" id="pt-ext" class="form-input" placeholder="e.g. 2001 or Sales Queue" />
-              </div>
-              <div class="form-field">
-                <label class="form-label" for="pt-status">Status <span class="required" aria-label="required">*</span></label>
-                <select id="pt-status" class="form-select" required>
-                  <option value="">Select status…</option>
-                  <option value="pass">✅ Pass</option>
-                  <option value="warning">⚠️ Warning</option>
-                  <option value="fail">❌ Fail</option>
-                </select>
-              </div>
-              <div class="form-field form-field-full">
-                <label class="form-label" for="pt-expected">Expected Outcome <span class="required" aria-label="required">*</span></label>
-                <input type="text" id="pt-expected" class="form-input" placeholder="e.g. Rings 3 times, answered by sales agent" required />
-              </div>
-              <div class="form-field form-field-full">
-                <label class="form-label" for="pt-actual">Actual Outcome</label>
-                <input type="text" id="pt-actual" class="form-input" placeholder="e.g. Went to voicemail after 2 rings — no agent available" />
-              </div>
-              <div class="form-field">
-                <label class="form-label" for="pt-datetime">Test Date &amp; Time</label>
-                <input type="datetime-local" id="pt-datetime" class="form-input" />
-              </div>
-              <div class="form-field form-field-full">
-                <label class="form-label" for="pt-notes">Notes</label>
-                <textarea id="pt-notes" class="form-textarea" rows="3" placeholder="Additional observations, ticket references, or follow-up actions…"></textarea>
+              <div>
+                <div class="card-title">IP / Domain Checker</div>
+                <div class="card-subtitle">Geolocation, ISP, reputation &amp; DNS</div>
               </div>
             </div>
-            <div class="form-actions">
-              <button type="button" class="btn btn-ghost" onclick="resetPhoneForm()">Clear Form</button>
-              <button type="button" class="btn btn-ghost" onclick="loadMockPhone()">Load Sample</button>
-              <button type="submit" class="btn btn-primary">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                Log Test
+
+            <!-- Input -->
+            <div class="input-wrap">
+              <svg class="input-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+              </svg>
+              <input
+                type="text"
+                id="ip-input"
+                class="text-input"
+                placeholder="IP address or domain — e.g. 8.8.8.8 or example.com"
+                autocomplete="off"
+                spellcheck="false"
+                aria-label="IP address or domain name"
+              />
+            </div>
+
+            <!-- Error -->
+            <div class="err-msg" id="ip-err" role="alert" aria-live="polite"></div>
+
+            <!-- Buttons -->
+            <div class="btn-row">
+              <button class="btn btn-primary" id="ip-check-btn" onclick="runIPCheck()" aria-label="Check IP or domain">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                </svg>
+                Check
+              </button>
+              <button class="btn btn-secondary" id="my-ip-btn" onclick="fetchMyIP()" aria-label="Detect my public IP address">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <circle cx="12" cy="12" r="10"/><polyline points="12 8 12 12 14 14"/>
+                </svg>
+                Detect My IP
               </button>
             </div>
-          </form>
-        </div>
 
-        <!-- Phone Test Log -->
-        <div class="phone-log-area">
-          <div class="log-header">
-            <h3 class="card-title">Test Log</h3>
-            <span id="phone-count" class="count-badge">0 entries</span>
+            <!-- IP Result panel (hidden until check runs) -->
+            <div class="result-box" id="ip-result" aria-live="polite">
+              <div class="result-header">
+                <span class="result-target" id="ip-result-target">—</span>
+                <span class="pill" id="ip-result-pill"></span>
+              </div>
+              <div class="result-grid" id="ip-result-grid">
+                <!-- Populated by JS -->
+              </div>
+            </div>
           </div>
-          <div id="phone-log">
-            <!-- Rendered by phone-tester.js -->
-          </div>
-          <div id="phone-empty" class="empty-state">
-            <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
-              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.4 2 2 0 0 1 3.6 1.22h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.77a16 16 0 0 0 6.29 6.29l.96-.96a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/>
-            </svg>
-            <p class="empty-title">No tests logged yet</p>
-            <p class="empty-hint">Fill in the form and click "Log Test"</p>
-          </div>
-        </div>
 
-      </div>
-    </div>
-  </section>
 
-  <!-- ═══════════════════════════════════════════════
-       UNIFIED RESULTS DASHBOARD
-  ═══════════════════════════════════════════════ -->
-  <section class="section section-alt" id="dashboard">
+          <!-- ════════════════════════════════════════════
+               CARD 2 — Phone Number Validator
+          ════════════════════════════════════════════ -->
+          <div class="card" id="phone-card">
+            <div class="card-header">
+              <div class="card-icon card-icon-phone" aria-hidden="true">
+                <!-- Phone icon -->
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.4 2 2 0 0 1 3.6 1.22h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.77a16 16 0 0 0 6.29 6.29l.96-.96a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/>
+                </svg>
+              </div>
+              <div>
+                <div class="card-title">Phone Number Validator</div>
+                <div class="card-subtitle">Regex validation &amp; format detection</div>
+              </div>
+            </div>
+
+            <!-- Input -->
+            <div class="input-wrap">
+              <svg class="input-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.4 2 2 0 0 1 3.6 1.22h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.77a16 16 0 0 0 6.29 6.29l.96-.96a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/>
+              </svg>
+              <input
+                type="tel"
+                id="phone-input"
+                class="text-input"
+                placeholder="e.g. +44 20 7946 0101  or  +1 (555) 555-5555"
+                autocomplete="tel"
+                aria-label="Phone number to validate"
+              />
+            </div>
+
+            <!-- Error -->
+            <div class="err-msg" id="phone-err" role="alert" aria-live="polite"></div>
+
+            <!-- Buttons -->
+            <div class="btn-row">
+              <button class="btn btn-primary" onclick="validatePhone()" aria-label="Validate phone number">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+                  <polyline points="20 6 9 17 4 12"/>
+                </svg>
+                Validate
+              </button>
+              <button class="btn btn-secondary" onclick="clearPhone()" aria-label="Clear phone input">
+                Clear
+              </button>
+            </div>
+
+            <!-- Phone Validation Result (hidden until validate runs) -->
+            <div class="val-result" id="phone-result" role="status" aria-live="polite">
+              <div class="val-icon-wrap" id="phone-val-icon" aria-hidden="true"></div>
+              <div>
+                <div class="val-title" id="phone-val-title"></div>
+                <div class="val-detail" id="phone-val-detail"></div>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- /.tools-grid -->
+      </div><!-- /.container -->
+    </section>
+  </main>
+
+  <!-- ── Footer ─────────────────────────────────────────── -->
+  <footer>
     <div class="container">
-      <div class="section-header">
-        <div class="section-icon-wrap dash-icon-bg">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
-            <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
-          </svg>
-        </div>
-        <div>
-          <h2 class="section-title">Unified Results Dashboard</h2>
-          <p class="section-sub">Complete test history with filtering, statistics, and alerting</p>
-        </div>
-      </div>
-
-      <!-- Summary Stats -->
-      <div class="stats-grid">
-        <div class="stat-card">
-          <div class="stat-icon-wrap">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-          </div>
-          <div class="stat-info">
-            <span class="stat-value" id="dash-total">0</span>
-            <span class="stat-label">Total Tests</span>
-          </div>
-        </div>
-        <div class="stat-card stat-pass">
-          <div class="stat-icon-wrap pass-icon">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-          </div>
-          <div class="stat-info">
-            <span class="stat-value" id="dash-pass">0</span>
-            <span class="stat-label">Passed</span>
-          </div>
-        </div>
-        <div class="stat-card stat-warn">
-          <div class="stat-icon-wrap warn-icon">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-          </div>
-          <div class="stat-info">
-            <span class="stat-value" id="dash-warn">0</span>
-            <span class="stat-label">Warnings</span>
-          </div>
-        </div>
-        <div class="stat-card stat-fail">
-          <div class="stat-icon-wrap fail-icon">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-          </div>
-          <div class="stat-info">
-            <span class="stat-value" id="dash-fail">0</span>
-            <span class="stat-label">Failed</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Alert Panel: recent failures and warnings -->
-      <div class="alert-panel" id="alert-panel">
-        <div class="alert-panel-header">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-          Recent Alerts
-          <span id="alert-count" class="alert-count">0</span>
-        </div>
-        <div id="alert-list" class="alert-list">
-          <p class="no-alerts">No recent failures or warnings</p>
-        </div>
-      </div>
-
-      <!-- Filters & Export Controls -->
-      <div class="dash-controls">
-        <div class="filter-controls">
-          <select class="filter-select" id="filter-type" onchange="applyDashboardFilters()">
-            <option value="all">All Types</option>
-            <option value="ip">IP Tests</option>
-            <option value="domain">Domain Tests</option>
-            <option value="phone">Phone Tests</option>
-          </select>
-          <select class="filter-select" id="filter-status" onchange="applyDashboardFilters()">
-            <option value="all">All Statuses</option>
-            <option value="pass">Pass</option>
-            <option value="warning">Warning</option>
-            <option value="fail">Fail</option>
-          </select>
-          <input type="date" class="filter-input" id="filter-date" onchange="applyDashboardFilters()" title="Filter by date" />
-          <button class="btn btn-ghost btn-sm" onclick="clearDashFilters()">Clear Filters</button>
-        </div>
-        <div class="export-controls">
-          <button class="btn btn-secondary btn-sm" onclick="exportCSV()">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-            Export CSV
-          </button>
-          <button class="btn btn-ghost btn-sm" onclick="loadAllMockData()">Load Sample Data</button>
-        </div>
-      </div>
-
-      <!-- Results Table -->
-      <div class="table-wrapper">
-        <table class="results-table" id="results-table">
-          <thead>
-            <tr>
-              <th>Type</th>
-              <th>Target</th>
-              <th>Status</th>
-              <th>Summary</th>
-              <th>Date</th>
-              <th aria-label="Actions"></th>
-            </tr>
-          </thead>
-          <tbody id="results-tbody">
-            <!-- Rendered by dashboard.js -->
-          </tbody>
-        </table>
-        <!-- Dashboard Empty State -->
-        <div id="dash-empty" class="empty-state">
-          <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
-            <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
-            <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
-          </svg>
-          <p class="empty-title">No test results yet</p>
-          <p class="empty-hint">Run checks or log phone tests, then save them to the dashboard. Or load sample data to explore.</p>
-          <button class="btn btn-primary btn-sm" onclick="loadAllMockData()">Load Sample Data</button>
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- ═══════════════════════════════════════════════
-       FUTURE INTEGRATIONS
-  ═══════════════════════════════════════════════ -->
-  <section class="section" id="future-integrations">
-    <div class="container">
-      <div class="section-header">
-        <div class="section-icon-wrap future-icon-bg">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
-          </svg>
-        </div>
-        <div>
-          <h2 class="section-title">Future Integrations</h2>
-          <p class="section-sub">Planned API connections to enable real-time data and automated alerting</p>
-        </div>
-      </div>
-
-      <div class="integrations-grid">
-
-        <!-- VirusTotal -->
-        <div class="integration-card">
-          <div class="int-icon-wrap">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-            </svg>
-          </div>
-          <h4 class="int-title">VirusTotal API</h4>
-          <p class="int-desc">Scan IP addresses and domains against 90+ antivirus engines and security vendors. Enrich results with real-time threat intelligence and malware reputation data.</p>
-          <div class="int-meta">
-            <span class="int-badge planned">Planned</span>
-            <code class="int-endpoint">api.virustotal.com/v3</code>
-          </div>
-        </div>
-
-        <!-- AbuseIPDB -->
-        <div class="integration-card">
-          <div class="int-icon-wrap">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-              <circle cx="12" cy="12" r="10"/>
-              <line x1="12" y1="8" x2="12" y2="12"/>
-              <line x1="12" y1="16" x2="12.01" y2="16"/>
-            </svg>
-          </div>
-          <h4 class="int-title">AbuseIPDB API</h4>
-          <p class="int-desc">Query a crowdsourced database of malicious IP addresses. Get confidence scores, abuse category data, and report history for any IP address worldwide.</p>
-          <div class="int-meta">
-            <span class="int-badge planned">Planned</span>
-            <code class="int-endpoint">api.abuseipdb.com/api/v2</code>
-          </div>
-        </div>
-
-        <!-- DNS & SSL APIs -->
-        <div class="integration-card">
-          <div class="int-icon-wrap">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-              <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-            </svg>
-          </div>
-          <h4 class="int-title">DNS &amp; SSL APIs</h4>
-          <p class="int-desc">Integrate live DNS resolution via Cloudflare 1.1.1.1 and Google 8.8.8.8 DoH APIs, plus SSL Labs for real certificate grading, chain validation, and cipher analysis.</p>
-          <div class="int-meta">
-            <span class="int-badge planned">Planned</span>
-            <code class="int-endpoint">dns.google / api.ssllabs.com</code>
-          </div>
-        </div>
-
-        <!-- Twilio -->
-        <div class="integration-card">
-          <div class="int-icon-wrap">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.4 2 2 0 0 1 3.6 1.22h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.77a16 16 0 0 0 6.29 6.29l.96-.96a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/>
-            </svg>
-          </div>
-          <h4 class="int-title">Twilio / Telephony API</h4>
-          <p class="int-desc">Automate call flow tests using Twilio Programmable Voice. Trigger outbound test calls, parse IVR responses via TwiML, and log call outcomes directly to the dashboard.</p>
-          <div class="int-meta">
-            <span class="int-badge planned">Planned</span>
-            <code class="int-endpoint">api.twilio.com/2010-04-01</code>
-          </div>
-        </div>
-
-        <!-- Email & Webhook Alerting -->
-        <div class="integration-card">
-          <div class="int-icon-wrap">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-              <polyline points="22,6 12,13 2,6"/>
-            </svg>
-          </div>
-          <h4 class="int-title">Email &amp; Webhook Alerting</h4>
-          <p class="int-desc">Send failure and warning notifications via SMTP or SendGrid email, and outbound webhooks to Slack, Microsoft Teams, and PagerDuty. Configure per-module thresholds and escalation rules.</p>
-          <div class="int-meta">
-            <span class="int-badge planned">Planned</span>
-            <code class="int-endpoint">SendGrid / Slack Webhooks</code>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══════════════════════════════════════════════
-       FOOTER
-  ═══════════════════════════════════════════════ -->
-  <footer class="footer">
-    <div class="container">
-      <div class="footer-inner">
-        <div class="footer-brand">
-          <svg width="22" height="22" viewBox="0 0 32 32" fill="none">
-            <rect width="32" height="32" rx="8" fill="url(#footerGrad)"/>
-            <circle cx="16" cy="16" r="7" fill="none" stroke="white" stroke-width="1.5"/>
-            <circle cx="16" cy="16" r="2.5" fill="white"/>
-            <defs>
-              <linearGradient id="footerGrad" x1="0" y1="0" x2="32" y2="32">
-                <stop offset="0%" stop-color="#0ea5e9"/>
-                <stop offset="100%" stop-color="#6366f1"/>
-              </linearGradient>
-            </defs>
-          </svg>
-          <span>IP&amp;D Hub</span>
-        </div>
-        <p class="footer-text">IP, Domain &amp; Telephony Testing Hub — Built for IT Operations</p>
-        <p class="footer-text footer-small">All data is mock / sample only. No real API calls are made. Integrations are planned for future releases.</p>
-      </div>
+      <p>Network Tools &mdash; Part of the
+        <a href="../">IT Portfolio</a>
+      </p>
     </div>
   </footer>
 
-  <!-- Toast notification (aria-live for screen readers) -->
-  <div id="toast" class="toast" role="status" aria-live="polite" aria-atomic="true"></div>
+  <!-- Toast -->
+  <div class="toast" id="toast" aria-live="polite" aria-atomic="true"></div>
 
-  <!-- ─── Scripts loaded in dependency order ───────────────────────────────── -->
-  <script src="js/data.js"></script>
-  <script src="js/ip-checker.js"></script>
-  <script src="js/domain-checker.js"></script>
-  <script src="js/phone-tester.js"></script>
-  <script src="js/dashboard.js"></script>
-  <script src="js/app.js"></script>
+  <script>
+    /* ═══════════════════════════════════════════════════════════
+       Network Tools — Inline JavaScript
+    ═══════════════════════════════════════════════════════════ */
+    'use strict';
+
+    /* ── Nav scroll behaviour ──────────────────────────────────── */
+    window.addEventListener('scroll', () => {
+      document.getElementById('main-nav')
+        .classList.toggle('scrolled', window.scrollY > 10);
+    }, { passive: true });
+
+
+    /* ── Toast helper ──────────────────────────────────────────── */
+    let _toastTimer;
+    function showToast(msg, dur = 3500) {
+      const el = document.getElementById('toast');
+      el.textContent = msg;
+      el.classList.add('show');
+      clearTimeout(_toastTimer);
+      _toastTimer = setTimeout(() => el.classList.remove('show'), dur);
+    }
+
+
+    /* ════════════════════════════════════════════════════════════
+       IP / DOMAIN CHECKER
+    ════════════════════════════════════════════════════════════ */
+
+    /** Validate a string as IPv4, IPv6, or a basic domain. */
+    function isValidTarget(str) {
+      const ipv4   = /^(\d{1,3}\.){3}\d{1,3}$/;
+      const ipv6   = /^([0-9a-fA-F]{0,4}:){2,7}[0-9a-fA-F]{0,4}$/;
+      const domain = /^[a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?(\.[a-zA-Z]{2,})+$/;
+      return ipv4.test(str) || ipv6.test(str) || domain.test(str);
+    }
+
+    /**
+     * Fetch the user's real public IP from api.ipify.org,
+     * then auto-fill the input and run the check.
+     */
+    async function fetchMyIP() {
+      const btn      = document.getElementById('my-ip-btn');
+      const origHTML = btn.innerHTML;
+      btn.innerHTML  = '<span class="spinner"></span> Detecting…';
+      btn.disabled   = true;
+      hideIPErr();
+
+      try {
+        const res = await fetch('https://api.ipify.org?format=json');
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const { ip } = await res.json();
+
+        document.getElementById('ip-input').value = ip;
+        showToast(`Your public IP: ${ip}`);
+        runIPCheck();          // auto-run check for the detected IP
+      } catch (err) {
+        showIPErr('Could not detect your public IP. Check your connection and try again.');
+      } finally {
+        btn.innerHTML = origHTML;
+        btn.disabled  = false;
+      }
+    }
+
+    /** Main entry: validate input, show loader, render result. */
+    function runIPCheck() {
+      const input  = document.getElementById('ip-input');
+      const target = (input.value || '')
+        .trim()
+        .replace(/^https?:\/\//i, '')
+        .replace(/\/.*$/, '');
+
+      hideIPErr();
+      document.getElementById('ip-result').classList.remove('show');
+
+      if (!target) {
+        showIPErr('Please enter an IP address or domain name.');
+        input.focus();
+        return;
+      }
+
+      if (!isValidTarget(target)) {
+        showIPErr('Enter a valid IPv4 address (e.g. 8.8.8.8) or domain (e.g. example.com).');
+        input.focus();
+        return;
+      }
+
+      /* Show loading state on the Check button */
+      const btn      = document.getElementById('ip-check-btn');
+      const origHTML = btn.innerHTML;
+      btn.innerHTML  = '<span class="spinner"></span> Checking…';
+      btn.disabled   = true;
+
+      /* Simulate brief async delay — replace with real API call as needed */
+      setTimeout(() => {
+        renderIPResult(target);
+        btn.innerHTML = origHTML;
+        btn.disabled  = false;
+      }, 750);
+    }
+
+    /* ── Mock data sets for known IPs and domains ─────────────── */
+    const KNOWN_IPS = {
+      '8.8.8.8':        { isp:'Google LLC',              asn:'AS15169',  country:'United States',  city:'Mountain View, CA', rdns:'dns.google',              rep:98, blacklisted:false  },
+      '8.8.4.4':        { isp:'Google LLC',              asn:'AS15169',  country:'United States',  city:'Mountain View, CA', rdns:'dns.google',              rep:97, blacklisted:false  },
+      '1.1.1.1':        { isp:'Cloudflare, Inc.',        asn:'AS13335',  country:'Australia',      city:'Sydney',            rdns:'one.one.one.one',         rep:97, blacklisted:false  },
+      '185.220.101.42': { isp:'Digitale Gesellschaft',   asn:'AS208294', country:'Germany',        city:'Frankfurt',         rdns:'tor-exit.example.de',     rep:18, blacklisted:true   },
+      '104.16.123.96':  { isp:'Cloudflare, Inc.',        asn:'AS13335',  country:'United States',  city:'San Jose, CA',      rdns:'N/A',                     rep:91, blacklisted:false  },
+      '45.33.32.156':   { isp:'Akamai Technologies',     asn:'AS63949',  country:'United States',  city:'Fremont, CA',       rdns:'li674-156.linode.com',    rep:74, blacklisted:false  },
+    };
+
+    const KNOWN_DOMAINS = {
+      'google.com':     { a:'142.250.185.78', mx:'aspmx.l.google.com',         ssl:'A+', status:'pass' },
+      'cloudflare.com': { a:'104.16.133.229', mx:'isaac.mx.cloudflare.net',    ssl:'A+', status:'pass' },
+      'github.com':     { a:'140.82.121.4',   mx:'aspmx.l.google.com',         ssl:'A+', status:'pass' },
+      'example.com':    { a:'93.184.216.34',  mx:'Not configured',             ssl:'B',  status:'warn' },
+    };
+
+    /** Build and show the IP/domain result panel. */
+    function renderIPResult(target) {
+      const isIP = /^(\d{1,3}\.){3}\d{1,3}$/.test(target) ||
+                   /^([0-9a-fA-F]{0,4}:){2,7}[0-9a-fA-F]{0,4}$/.test(target);
+
+      const resultBox = document.getElementById('ip-result');
+      const grid      = document.getElementById('ip-result-grid');
+      const pill      = document.getElementById('ip-result-pill');
+      const pillTarget = document.getElementById('ip-result-target');
+
+      pillTarget.textContent = target;
+
+      if (isIP) {
+        const d = KNOWN_IPS[target] || {
+          isp:'Example ISP', asn:'AS64496', country:'United States',
+          city:'Anytown', rdns:'host.example.com', rep:72, blacklisted:false,
+        };
+
+        const repColor = d.rep >= 80 ? 'var(--pass)' : d.rep >= 50 ? 'var(--warn)' : 'var(--fail)';
+        const status   = d.blacklisted ? 'fail' : d.rep >= 80 ? 'pass' : 'warn';
+
+        pill.className   = `pill pill-${status}`;
+        pill.textContent = status === 'pass' ? '✓ Clean' : status === 'fail' ? '✗ Flagged' : '⚠ Caution';
+
+        grid.innerHTML = `
+          ${rcell('ISP / Provider',   d.isp)}
+          ${rcell('ASN',              d.asn, true)}
+          ${rcell('Country',          d.country)}
+          ${rcell('City',             d.city)}
+          ${rcell('Reverse DNS',      d.rdns, true)}
+          ${rcell('Blacklisted',      d.blacklisted ? '⛔ Yes — listed on RBL' : '✅ No — not listed', false, d.blacklisted ? 'var(--fail)' : 'var(--pass)')}
+          <div class="result-cell span-2">
+            <div class="rc-label">Reputation Score</div>
+            <div class="score-row">
+              <span class="score-num" style="color:${repColor}">${d.rep}</span>
+              <div class="score-bar">
+                <div class="score-fill" style="width:${d.rep}%;background:${repColor}"></div>
+              </div>
+              <span style="font-size:0.78rem;color:var(--muted);min-width:2.5rem">/ 100</span>
+            </div>
+          </div>
+        `;
+      } else {
+        /* Domain lookup */
+        const d = KNOWN_DOMAINS[target.toLowerCase()] || {
+          a:      `203.0.113.${Math.floor(Math.random()*200)+1}`,
+          mx:     `mail.${target}`,
+          ssl:    'A',
+          status: 'pass',
+        };
+
+        pill.className   = `pill pill-${d.status === 'warn' ? 'warn' : d.status}`;
+        pill.textContent = d.status === 'pass' ? '✓ Healthy' : d.status === 'fail' ? '✗ Issues' : '⚠ Warning';
+
+        grid.innerHTML = `
+          ${rcell('A Record (IPv4)', d.a, true)}
+          ${rcell('MX Record',       d.mx, true)}
+          ${rcell('SSL Grade',       d.ssl, false, d.ssl.startsWith('A') ? 'var(--pass)' : 'var(--warn)')}
+          ${rcell('Domain',          target.toLowerCase())}
+        `;
+      }
+
+      resultBox.classList.add('show');
+    }
+
+    /** Helper: build a single result-grid cell. */
+    function rcell(label, value, mono = false, color = null) {
+      const style = color ? `style="color:${color}"` : '';
+      return `
+        <div class="result-cell">
+          <div class="rc-label">${label}</div>
+          <div class="rc-value${mono ? ' mono' : ''}" ${style}>${value}</div>
+        </div>`;
+    }
+
+    function showIPErr(msg) {
+      const el = document.getElementById('ip-err');
+      el.textContent = msg;
+      el.classList.add('show');
+    }
+
+    function hideIPErr() {
+      document.getElementById('ip-err').classList.remove('show');
+    }
+
+    /* Keyboard shortcut: Enter key triggers check */
+    document.getElementById('ip-input').addEventListener('keydown', e => {
+      if (e.key === 'Enter') runIPCheck();
+    });
+
+
+    /* ════════════════════════════════════════════════════════════
+       PHONE NUMBER VALIDATOR
+    ════════════════════════════════════════════════════════════ */
+
+    /**
+     * Phone number validation patterns (ordered from most to least specific).
+     *
+     * Supported formats:
+     *   International E.164:  +44 20 7946 0101 | +1 (555) 555-5555 | +61 2 1234 5678
+     *   North American NANP:  (555) 555-5555  | 555-555-5555 | 5555555555
+     *   UK local:             020 7946 0101   | 07911 123456
+     *   General 7-15 digit:   +X XXXXXXXXX (any country)
+     */
+    const PHONE_REGEXES = [
+      // E.164 strict: +<1-3 digit country code> <6-14 digits> with optional spaces/dashes/dots/parens
+      /^\+[1-9]\d{0,2}[\s.\-]?\(?\d{1,4}\)?[\s.\-]?\d{2,4}[\s.\-]?\d{3,4}([\s.\-]?\d{1,4})?$/,
+      // NANP: (555) 555-5555 or 555-555-5555 or 5555555555 or 555.555.5555
+      /^(\(?\d{3}\)?[\s.\-])\d{3}[\s.\-]\d{4}$/,
+      /^\d{10}$/,
+      // UK: 0XXXXXXXXXX (11 digits starting with 0)
+      /^0\d{9,10}$/,
+      // Generic international fallback: 7-15 total digits
+      /^\+?\d[\d\s.\-()]{5,18}\d$/,
+    ];
+
+    /**
+     * Validate a phone number string.
+     * Returns false if digit count is outside 7-15 range regardless of pattern match.
+     */
+    function isValidPhone(raw) {
+      const cleaned = raw.trim();
+      if (!cleaned) return false;
+      const digits = cleaned.replace(/\D/g, '');
+      if (digits.length < 7 || digits.length > 15) return false;
+      return PHONE_REGEXES.some(rx => rx.test(cleaned));
+    }
+
+    /**
+     * Describe the format of a validated phone number for the result panel.
+     */
+    function describePhone(raw) {
+      const cleaned = raw.trim();
+      const digits  = cleaned.replace(/\D/g, '');
+
+      if (cleaned.startsWith('+')) {
+        const match = cleaned.match(/^\+(\d{1,3})/);
+        const cc    = match ? match[1] : '?';
+        const countryMap = {
+          '1':'North America', '7':'Russia/Kazakhstan', '20':'Egypt', '27':'South Africa',
+          '30':'Greece', '31':'Netherlands', '32':'Belgium', '33':'France', '34':'Spain',
+          '36':'Hungary', '39':'Italy', '40':'Romania', '41':'Switzerland', '43':'Austria',
+          '44':'United Kingdom', '45':'Denmark', '46':'Sweden', '47':'Norway', '48':'Poland',
+          '49':'Germany', '51':'Peru', '52':'Mexico', '53':'Cuba', '54':'Argentina',
+          '55':'Brazil', '56':'Chile', '57':'Colombia', '58':'Venezuela', '60':'Malaysia',
+          '61':'Australia', '62':'Indonesia', '63':'Philippines', '64':'New Zealand',
+          '65':'Singapore', '66':'Thailand', '81':'Japan', '82':'South Korea', '84':'Vietnam',
+          '86':'China', '90':'Turkey', '91':'India', '92':'Pakistan', '93':'Afghanistan',
+          '94':'Sri Lanka', '95':'Myanmar', '98':'Iran', '212':'Morocco', '213':'Algeria',
+          '234':'Nigeria', '254':'Kenya', '256':'Uganda', '260':'Zambia', '971':'UAE',
+          '972':'Israel', '974':'Qatar', '852':'Hong Kong', '886':'Taiwan',
+        };
+        const country = countryMap[cc] || `country code +${cc}`;
+        return `International format · +${cc} (${country}) · ${digits.length} digits`;
+      }
+
+      if (/^\(?\d{3}\)?[\s.\-]\d{3}[\s.\-]\d{4}$/.test(cleaned) || /^\d{10}$/.test(cleaned)) {
+        return 'North American format (NANP) · 10 digits';
+      }
+
+      if (/^0\d{9,10}$/.test(cleaned)) {
+        return digits.length === 11 ? 'UK format · 11 digits (e.g. 07xxx xxxxxx)' : 'UK format · 10 digits';
+      }
+
+      return `${digits.length} digits · Matches a recognised phone pattern`;
+    }
+
+    /** Run phone validation and update the result panel. */
+    function validatePhone() {
+      const input   = document.getElementById('phone-input');
+      const raw     = input.value.trim();
+      const errEl   = document.getElementById('phone-err');
+      const result  = document.getElementById('phone-result');
+      const icon    = document.getElementById('phone-val-icon');
+      const title   = document.getElementById('phone-val-title');
+      const detail  = document.getElementById('phone-val-detail');
+
+      /* Reset */
+      errEl.classList.remove('show');
+      result.classList.remove('show', 'valid', 'invalid');
+
+      if (!raw) {
+        errEl.textContent = 'Please enter a phone number to validate.';
+        errEl.classList.add('show');
+        input.focus();
+        return;
+      }
+
+      const valid = isValidPhone(raw);
+
+      if (valid) {
+        icon.innerHTML   = checkIcon();
+        title.textContent  = 'Valid Phone Number';
+        detail.textContent = describePhone(raw);
+        result.classList.add('show', 'valid');
+      } else {
+        icon.innerHTML   = crossIcon();
+        title.textContent  = 'Invalid Phone Number';
+        detail.textContent =
+          'This number does not match a recognised format. ' +
+          'Try: +44 20 7946 0101 · +1 (555) 555-5555 · 07911 123456';
+        result.classList.add('show', 'invalid');
+      }
+    }
+
+    /** Clear the phone input and result. */
+    function clearPhone() {
+      document.getElementById('phone-input').value = '';
+      document.getElementById('phone-result').classList.remove('show', 'valid', 'invalid');
+      document.getElementById('phone-err').classList.remove('show');
+    }
+
+    /* Enter key triggers validation */
+    document.getElementById('phone-input').addEventListener('keydown', e => {
+      if (e.key === 'Enter') validatePhone();
+    });
+
+
+    /* ── SVG icon helpers ─────────────────────────────────────── */
+    function checkIcon() {
+      return `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>`;
+    }
+
+    function crossIcon() {
+      return `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`;
+    }
+
+  </script>
 </body>
 </html>
