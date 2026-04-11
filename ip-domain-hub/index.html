@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IP, Domain &amp; Telephony Testing Hub</title>
+  <meta name="description" content="A unified IT operations platform for IP intelligence, domain health diagnostics, and call flow testing." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- ═══════════════════════════════════════════════
+       NAVIGATION
+  ═══════════════════════════════════════════════ -->
+  <nav class="nav" id="nav">
+    <div class="nav-inner">
+      <a href="#hero" class="nav-logo">
+        <svg class="logo-svg" width="30" height="30" viewBox="0 0 32 32" fill="none">
+          <rect width="32" height="32" rx="8" fill="url(#navLogoGrad)"/>
+          <circle cx="16" cy="16" r="7" fill="none" stroke="white" stroke-width="1.5"/>
+          <circle cx="16" cy="16" r="2.5" fill="white"/>
+          <line x1="16" y1="9" x2="16" y2="7" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="16" y1="25" x2="16" y2="23" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="9" y1="16" x2="7" y2="16" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="25" y1="16" x2="23" y2="16" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+          <defs>
+            <linearGradient id="navLogoGrad" x1="0" y1="0" x2="32" y2="32">
+              <stop offset="0%" stop-color="#0ea5e9"/>
+              <stop offset="100%" stop-color="#6366f1"/>
+            </linearGradient>
+          </defs>
+        </svg>
+        <span class="logo-text">IP&amp;D <strong>Hub</strong></span>
+      </a>
+
+      <div class="nav-links" id="nav-links">
+        <a href="#ip-checker" class="nav-link">IP Check</a>
+        <a href="#domain-checker" class="nav-link">Domain</a>
+        <a href="#phone-tester" class="nav-link">Phone</a>
+        <a href="#dashboard" class="nav-link">Dashboard</a>
+        <a href="#future-integrations" class="nav-link">Integrations</a>
+      </div>
+
+      <div class="nav-actions">
+        <button class="theme-toggle" id="theme-toggle" aria-label="Toggle light/dark mode" title="Toggle theme">
+          <!-- Sun icon (shown in dark mode) -->
+          <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <circle cx="12" cy="12" r="5"/>
+            <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+            <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+          </svg>
+          <!-- Moon icon (shown in light mode) -->
+          <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+        </button>
+        <button class="nav-hamburger" id="nav-hamburger" aria-label="Toggle navigation menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ═══════════════════════════════════════════════
+       HERO SECTION
+  ═══════════════════════════════════════════════ -->
+  <section class="hero" id="hero">
+    <div class="hero-bg" aria-hidden="true">
+      <div class="hero-orb hero-orb-1"></div>
+      <div class="hero-orb hero-orb-2"></div>
+      <div class="hero-orb hero-orb-3"></div>
+    </div>
+    <div class="container hero-container">
+      <div class="hero-badge">
+        <span class="badge-dot"></span>
+        IT Operations Testing Platform
+      </div>
+      <h1 class="hero-title">
+        IP, Domain &amp; Telephony<br/>
+        <span class="gradient-text">Testing Hub</span>
+      </h1>
+      <p class="hero-subtitle">
+        A unified platform for IP intelligence, domain health diagnostics, and call flow validation.
+        Built for IT operations teams who need fast, reliable infrastructure testing.
+      </p>
+      <div class="hero-actions">
+        <a href="#ip-checker" class="btn btn-primary">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/>
+          </svg>
+          Run IP Check
+        </a>
+        <a href="#domain-checker" class="btn btn-primary">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="2" y1="12" x2="22" y2="12"/>
+            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+          </svg>
+          Run Domain Check
+        </a>
+        <a href="#phone-tester" class="btn btn-secondary">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.4 2 2 0 0 1 3.6 1.22h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.77a16 16 0 0 0 6.29 6.29l.96-.96a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/>
+          </svg>
+          Log Phone Test
+        </a>
+        <a href="#dashboard" class="btn btn-ghost">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+            <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+          </svg>
+          View Dashboard
+        </a>
+      </div>
+
+      <!-- Live stats updated as tests are run -->
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <span class="hero-stat-value" id="hero-total">0</span>
+          <span class="hero-stat-label">Tests Run</span>
+        </div>
+        <div class="hero-stat-divider" aria-hidden="true"></div>
+        <div class="hero-stat">
+          <span class="hero-stat-value pass-color" id="hero-pass">0</span>
+          <span class="hero-stat-label">Passed</span>
+        </div>
+        <div class="hero-stat-divider" aria-hidden="true"></div>
+        <div class="hero-stat">
+          <span class="hero-stat-value warn-color" id="hero-warn">0</span>
+          <span class="hero-stat-label">Warnings</span>
+        </div>
+        <div class="hero-stat-divider" aria-hidden="true"></div>
+        <div class="hero-stat">
+          <span class="hero-stat-value fail-color" id="hero-fail">0</span>
+          <span class="hero-stat-label">Failed</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════
+       TOOLS OVERVIEW CARDS
+  ═══════════════════════════════════════════════ -->
+  <section class="section tools-section" id="tools">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Testing Modules</h2>
+        <p class="section-sub">Three integrated tools sharing one unified dashboard</p>
+      </div>
+      <div class="tools-grid">
+
+        <!-- IP Intelligence -->
+        <div class="tool-card" role="button" tabindex="0" onclick="smoothScrollTo('#ip-checker')" onkeydown="if(event.key==='Enter')smoothScrollTo('#ip-checker')">
+          <div class="tool-card-icon ip-icon-bg">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/>
+              <line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/>
+              <line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/>
+            </svg>
+          </div>
+          <h3 class="tool-card-title">IP Intelligence</h3>
+          <p class="tool-card-desc">Geolocation, ISP lookup, blacklist and reputation checks, reverse DNS, and overall health scoring for any IP address.</p>
+          <div class="tool-card-tags">
+            <span class="tag">Geolocation</span>
+            <span class="tag">Blacklist</span>
+            <span class="tag">rDNS</span>
+            <span class="tag">Health Score</span>
+          </div>
+          <div class="tool-card-cta">
+            Run IP Check
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </div>
+        </div>
+
+        <!-- Domain Health -->
+        <div class="tool-card" role="button" tabindex="0" onclick="smoothScrollTo('#domain-checker')" onkeydown="if(event.key==='Enter')smoothScrollTo('#domain-checker')">
+          <div class="tool-card-icon domain-icon-bg">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="2" y1="12" x2="22" y2="12"/>
+              <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+            </svg>
+          </div>
+          <h3 class="tool-card-title">Domain Health</h3>
+          <p class="tool-card-desc">DNS records, SPF/DKIM/DMARC email security, SSL validity, redirect chains, uptime, and HTTP security headers analysis.</p>
+          <div class="tool-card-tags">
+            <span class="tag">DNS</span>
+            <span class="tag">SSL/TLS</span>
+            <span class="tag">DMARC</span>
+            <span class="tag">Security Headers</span>
+          </div>
+          <div class="tool-card-cta">
+            Check Domain
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </div>
+        </div>
+
+        <!-- Phone & Call Flow -->
+        <div class="tool-card" role="button" tabindex="0" onclick="smoothScrollTo('#phone-tester')" onkeydown="if(event.key==='Enter')smoothScrollTo('#phone-tester')">
+          <div class="tool-card-icon phone-icon-bg">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.4 2 2 0 0 1 3.6 1.22h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.77a16 16 0 0 0 6.29 6.29l.96-.96a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/>
+            </svg>
+          </div>
+          <h3 class="tool-card-title">Phone &amp; Call Flow</h3>
+          <p class="tool-card-desc">Log and track telephony test results, IVR flows, queue routing, and call outcome validation across your telephony infrastructure.</p>
+          <div class="tool-card-tags">
+            <span class="tag">Call Flow</span>
+            <span class="tag">IVR</span>
+            <span class="tag">Queues</span>
+            <span class="tag">Outcomes</span>
+          </div>
+          <div class="tool-card-cta">
+            Log Test
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════
+       IP CHECKER
+  ═══════════════════════════════════════════════ -->
+  <section class="section" id="ip-checker">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-icon-wrap ip-icon-bg">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/>
+            <line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/>
+            <line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/>
+          </svg>
+        </div>
+        <div>
+          <h2 class="section-title">IP Intelligence</h2>
+          <p class="section-sub">Geolocation, ISP, reputation, and health for any IP address</p>
+        </div>
+      </div>
+
+      <div class="input-row">
+        <div class="input-group">
+          <svg class="input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/>
+          </svg>
+          <input
+            type="text" id="ip-input" class="text-input"
+            placeholder="Enter IP address — e.g. 8.8.8.8 or 185.220.101.42"
+            autocomplete="off" spellcheck="false"
+            onkeydown="if(event.key==='Enter')runIPCheck()"
+          />
+        </div>
+        <button class="btn btn-primary" id="ip-check-btn" onclick="runIPCheck()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          Run Check
+        </button>
+        <button class="btn btn-ghost" onclick="loadMockIP()">Sample Data</button>
+      </div>
+
+      <!-- IP Results (hidden until a check is run) -->
+      <div id="ip-results" class="results-area hidden">
+        <div class="results-header">
+          <div class="results-meta">
+            <span id="ip-result-target" class="result-target"></span>
+            <span id="ip-result-time" class="result-time"></span>
+          </div>
+          <span id="ip-health-badge" class="status-badge"></span>
+        </div>
+        <div class="ip-results-grid" id="ip-results-grid">
+          <!-- Rendered by ip-checker.js -->
+        </div>
+        <div class="result-actions">
+          <button class="btn btn-secondary btn-sm" onclick="saveIPResult()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17,21 17,13 7,13 7,21"/><polyline points="7,3 7,8 15,8"/></svg>
+            Save to Dashboard
+          </button>
+        </div>
+      </div>
+
+      <!-- IP Empty State -->
+      <div id="ip-empty" class="empty-state">
+        <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+          <circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/>
+          <line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/>
+          <line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/>
+        </svg>
+        <p class="empty-title">No IP checked yet</p>
+        <p class="empty-hint">Enter an IP address above or click "Sample Data" to explore</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════
+       DOMAIN CHECKER
+  ═══════════════════════════════════════════════ -->
+  <section class="section section-alt" id="domain-checker">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-icon-wrap domain-icon-bg">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="2" y1="12" x2="22" y2="12"/>
+            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+          </svg>
+        </div>
+        <div>
+          <h2 class="section-title">Domain Health</h2>
+          <p class="section-sub">DNS, email security, SSL, redirects, uptime, and security headers</p>
+        </div>
+      </div>
+
+      <div class="input-row">
+        <div class="input-group">
+          <svg class="input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="2" y1="12" x2="22" y2="12"/>
+            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+          </svg>
+          <input
+            type="text" id="domain-input" class="text-input"
+            placeholder="Enter domain — e.g. example.com or mail.contoso.com"
+            autocomplete="off" spellcheck="false"
+            onkeydown="if(event.key==='Enter')runDomainCheck()"
+          />
+        </div>
+        <button class="btn btn-primary" id="domain-check-btn" onclick="runDomainCheck()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          Check Domain
+        </button>
+        <button class="btn btn-ghost" onclick="loadMockDomain()">Sample Data</button>
+      </div>
+
+      <!-- Domain Results (hidden until a check is run) -->
+      <div id="domain-results" class="results-area hidden">
+        <div class="results-header">
+          <div class="results-meta">
+            <span id="domain-result-target" class="result-target"></span>
+            <span id="domain-result-time" class="result-time"></span>
+          </div>
+          <span id="domain-health-badge" class="status-badge"></span>
+        </div>
+        <div class="domain-results-grid" id="domain-results-grid">
+          <!-- Rendered by domain-checker.js -->
+        </div>
+        <div class="result-actions">
+          <button class="btn btn-secondary btn-sm" onclick="saveDomainResult()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17,21 17,13 7,13 7,21"/><polyline points="7,3 7,8 15,8"/></svg>
+            Save to Dashboard
+          </button>
+        </div>
+      </div>
+
+      <!-- Domain Empty State -->
+      <div id="domain-empty" class="empty-state">
+        <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="2" y1="12" x2="22" y2="12"/>
+          <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+        </svg>
+        <p class="empty-title">No domain checked yet</p>
+        <p class="empty-hint">Enter a domain name above or click "Sample Data" to explore</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════
+       PHONE & CALL FLOW TESTING
+  ═══════════════════════════════════════════════ -->
+  <section class="section" id="phone-tester">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-icon-wrap phone-icon-bg">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.4 2 2 0 0 1 3.6 1.22h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.77a16 16 0 0 0 6.29 6.29l.96-.96a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/>
+          </svg>
+        </div>
+        <div>
+          <h2 class="section-title">Phone &amp; Call Flow Testing</h2>
+          <p class="section-sub">Log and track telephony tests, IVR flows, and call routing validation</p>
+        </div>
+      </div>
+
+      <div class="phone-layout">
+
+        <!-- Phone Test Form -->
+        <div class="card form-card">
+          <h3 class="card-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+            Log New Test
+          </h3>
+          <form id="phone-form" onsubmit="submitPhoneTest(event)" novalidate>
+            <div class="form-grid">
+              <div class="form-field">
+                <label class="form-label" for="pt-name">Test Name <span class="required" aria-label="required">*</span></label>
+                <input type="text" id="pt-name" class="form-input" placeholder="e.g. Sales Queue Routing Test" required />
+              </div>
+              <div class="form-field">
+                <label class="form-label" for="pt-phone">Phone Number <span class="required" aria-label="required">*</span></label>
+                <input type="tel" id="pt-phone" class="form-input" placeholder="e.g. +44 20 1234 5678" required />
+              </div>
+              <div class="form-field">
+                <label class="form-label" for="pt-ext">Extension / Queue</label>
+                <input type="text" id="pt-ext" class="form-input" placeholder="e.g. 2001 or Sales Queue" />
+              </div>
+              <div class="form-field">
+                <label class="form-label" for="pt-status">Status <span class="required" aria-label="required">*</span></label>
+                <select id="pt-status" class="form-select" required>
+                  <option value="">Select status…</option>
+                  <option value="pass">✅ Pass</option>
+                  <option value="warning">⚠️ Warning</option>
+                  <option value="fail">❌ Fail</option>
+                </select>
+              </div>
+              <div class="form-field form-field-full">
+                <label class="form-label" for="pt-expected">Expected Outcome <span class="required" aria-label="required">*</span></label>
+                <input type="text" id="pt-expected" class="form-input" placeholder="e.g. Rings 3 times, answered by sales agent" required />
+              </div>
+              <div class="form-field form-field-full">
+                <label class="form-label" for="pt-actual">Actual Outcome</label>
+                <input type="text" id="pt-actual" class="form-input" placeholder="e.g. Went to voicemail after 2 rings — no agent available" />
+              </div>
+              <div class="form-field">
+                <label class="form-label" for="pt-datetime">Test Date &amp; Time</label>
+                <input type="datetime-local" id="pt-datetime" class="form-input" />
+              </div>
+              <div class="form-field form-field-full">
+                <label class="form-label" for="pt-notes">Notes</label>
+                <textarea id="pt-notes" class="form-textarea" rows="3" placeholder="Additional observations, ticket references, or follow-up actions…"></textarea>
+              </div>
+            </div>
+            <div class="form-actions">
+              <button type="button" class="btn btn-ghost" onclick="resetPhoneForm()">Clear Form</button>
+              <button type="button" class="btn btn-ghost" onclick="loadMockPhone()">Load Sample</button>
+              <button type="submit" class="btn btn-primary">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                Log Test
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Phone Test Log -->
+        <div class="phone-log-area">
+          <div class="log-header">
+            <h3 class="card-title">Test Log</h3>
+            <span id="phone-count" class="count-badge">0 entries</span>
+          </div>
+          <div id="phone-log">
+            <!-- Rendered by phone-tester.js -->
+          </div>
+          <div id="phone-empty" class="empty-state">
+            <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.4 2 2 0 0 1 3.6 1.22h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.77a16 16 0 0 0 6.29 6.29l.96-.96a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/>
+            </svg>
+            <p class="empty-title">No tests logged yet</p>
+            <p class="empty-hint">Fill in the form and click "Log Test"</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════
+       UNIFIED RESULTS DASHBOARD
+  ═══════════════════════════════════════════════ -->
+  <section class="section section-alt" id="dashboard">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-icon-wrap dash-icon-bg">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+            <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+          </svg>
+        </div>
+        <div>
+          <h2 class="section-title">Unified Results Dashboard</h2>
+          <p class="section-sub">Complete test history with filtering, statistics, and alerting</p>
+        </div>
+      </div>
+
+      <!-- Summary Stats -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon-wrap">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          </div>
+          <div class="stat-info">
+            <span class="stat-value" id="dash-total">0</span>
+            <span class="stat-label">Total Tests</span>
+          </div>
+        </div>
+        <div class="stat-card stat-pass">
+          <div class="stat-icon-wrap pass-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <div class="stat-info">
+            <span class="stat-value" id="dash-pass">0</span>
+            <span class="stat-label">Passed</span>
+          </div>
+        </div>
+        <div class="stat-card stat-warn">
+          <div class="stat-icon-wrap warn-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          </div>
+          <div class="stat-info">
+            <span class="stat-value" id="dash-warn">0</span>
+            <span class="stat-label">Warnings</span>
+          </div>
+        </div>
+        <div class="stat-card stat-fail">
+          <div class="stat-icon-wrap fail-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </div>
+          <div class="stat-info">
+            <span class="stat-value" id="dash-fail">0</span>
+            <span class="stat-label">Failed</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Alert Panel: recent failures and warnings -->
+      <div class="alert-panel" id="alert-panel">
+        <div class="alert-panel-header">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          Recent Alerts
+          <span id="alert-count" class="alert-count">0</span>
+        </div>
+        <div id="alert-list" class="alert-list">
+          <p class="no-alerts">No recent failures or warnings</p>
+        </div>
+      </div>
+
+      <!-- Filters & Export Controls -->
+      <div class="dash-controls">
+        <div class="filter-controls">
+          <select class="filter-select" id="filter-type" onchange="applyDashboardFilters()">
+            <option value="all">All Types</option>
+            <option value="ip">IP Tests</option>
+            <option value="domain">Domain Tests</option>
+            <option value="phone">Phone Tests</option>
+          </select>
+          <select class="filter-select" id="filter-status" onchange="applyDashboardFilters()">
+            <option value="all">All Statuses</option>
+            <option value="pass">Pass</option>
+            <option value="warning">Warning</option>
+            <option value="fail">Fail</option>
+          </select>
+          <input type="date" class="filter-input" id="filter-date" onchange="applyDashboardFilters()" title="Filter by date" />
+          <button class="btn btn-ghost btn-sm" onclick="clearDashFilters()">Clear Filters</button>
+        </div>
+        <div class="export-controls">
+          <button class="btn btn-secondary btn-sm" onclick="exportCSV()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Export CSV
+          </button>
+          <button class="btn btn-ghost btn-sm" onclick="loadAllMockData()">Load Sample Data</button>
+        </div>
+      </div>
+
+      <!-- Results Table -->
+      <div class="table-wrapper">
+        <table class="results-table" id="results-table">
+          <thead>
+            <tr>
+              <th>Type</th>
+              <th>Target</th>
+              <th>Status</th>
+              <th>Summary</th>
+              <th>Date</th>
+              <th aria-label="Actions"></th>
+            </tr>
+          </thead>
+          <tbody id="results-tbody">
+            <!-- Rendered by dashboard.js -->
+          </tbody>
+        </table>
+        <!-- Dashboard Empty State -->
+        <div id="dash-empty" class="empty-state">
+          <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+            <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+            <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+          </svg>
+          <p class="empty-title">No test results yet</p>
+          <p class="empty-hint">Run checks or log phone tests, then save them to the dashboard. Or load sample data to explore.</p>
+          <button class="btn btn-primary btn-sm" onclick="loadAllMockData()">Load Sample Data</button>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════
+       FUTURE INTEGRATIONS
+  ═══════════════════════════════════════════════ -->
+  <section class="section" id="future-integrations">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-icon-wrap future-icon-bg">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
+          </svg>
+        </div>
+        <div>
+          <h2 class="section-title">Future Integrations</h2>
+          <p class="section-sub">Planned API connections to enable real-time data and automated alerting</p>
+        </div>
+      </div>
+
+      <div class="integrations-grid">
+
+        <!-- VirusTotal -->
+        <div class="integration-card">
+          <div class="int-icon-wrap">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+          </div>
+          <h4 class="int-title">VirusTotal API</h4>
+          <p class="int-desc">Scan IP addresses and domains against 90+ antivirus engines and security vendors. Enrich results with real-time threat intelligence and malware reputation data.</p>
+          <div class="int-meta">
+            <span class="int-badge planned">Planned</span>
+            <code class="int-endpoint">api.virustotal.com/v3</code>
+          </div>
+        </div>
+
+        <!-- AbuseIPDB -->
+        <div class="integration-card">
+          <div class="int-icon-wrap">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="12" y1="8" x2="12" y2="12"/>
+              <line x1="12" y1="16" x2="12.01" y2="16"/>
+            </svg>
+          </div>
+          <h4 class="int-title">AbuseIPDB API</h4>
+          <p class="int-desc">Query a crowdsourced database of malicious IP addresses. Get confidence scores, abuse category data, and report history for any IP address worldwide.</p>
+          <div class="int-meta">
+            <span class="int-badge planned">Planned</span>
+            <code class="int-endpoint">api.abuseipdb.com/api/v2</code>
+          </div>
+        </div>
+
+        <!-- DNS & SSL APIs -->
+        <div class="integration-card">
+          <div class="int-icon-wrap">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            </svg>
+          </div>
+          <h4 class="int-title">DNS &amp; SSL APIs</h4>
+          <p class="int-desc">Integrate live DNS resolution via Cloudflare 1.1.1.1 and Google 8.8.8.8 DoH APIs, plus SSL Labs for real certificate grading, chain validation, and cipher analysis.</p>
+          <div class="int-meta">
+            <span class="int-badge planned">Planned</span>
+            <code class="int-endpoint">dns.google / api.ssllabs.com</code>
+          </div>
+        </div>
+
+        <!-- Twilio -->
+        <div class="integration-card">
+          <div class="int-icon-wrap">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.4 2 2 0 0 1 3.6 1.22h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.77a16 16 0 0 0 6.29 6.29l.96-.96a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/>
+            </svg>
+          </div>
+          <h4 class="int-title">Twilio / Telephony API</h4>
+          <p class="int-desc">Automate call flow tests using Twilio Programmable Voice. Trigger outbound test calls, parse IVR responses via TwiML, and log call outcomes directly to the dashboard.</p>
+          <div class="int-meta">
+            <span class="int-badge planned">Planned</span>
+            <code class="int-endpoint">api.twilio.com/2010-04-01</code>
+          </div>
+        </div>
+
+        <!-- Email & Webhook Alerting -->
+        <div class="integration-card">
+          <div class="int-icon-wrap">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+              <polyline points="22,6 12,13 2,6"/>
+            </svg>
+          </div>
+          <h4 class="int-title">Email &amp; Webhook Alerting</h4>
+          <p class="int-desc">Send failure and warning notifications via SMTP or SendGrid email, and outbound webhooks to Slack, Microsoft Teams, and PagerDuty. Configure per-module thresholds and escalation rules.</p>
+          <div class="int-meta">
+            <span class="int-badge planned">Planned</span>
+            <code class="int-endpoint">SendGrid / Slack Webhooks</code>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════
+       FOOTER
+  ═══════════════════════════════════════════════ -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <svg width="22" height="22" viewBox="0 0 32 32" fill="none">
+            <rect width="32" height="32" rx="8" fill="url(#footerGrad)"/>
+            <circle cx="16" cy="16" r="7" fill="none" stroke="white" stroke-width="1.5"/>
+            <circle cx="16" cy="16" r="2.5" fill="white"/>
+            <defs>
+              <linearGradient id="footerGrad" x1="0" y1="0" x2="32" y2="32">
+                <stop offset="0%" stop-color="#0ea5e9"/>
+                <stop offset="100%" stop-color="#6366f1"/>
+              </linearGradient>
+            </defs>
+          </svg>
+          <span>IP&amp;D Hub</span>
+        </div>
+        <p class="footer-text">IP, Domain &amp; Telephony Testing Hub — Built for IT Operations</p>
+        <p class="footer-text footer-small">All data is mock / sample only. No real API calls are made. Integrations are planned for future releases.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Toast notification (aria-live for screen readers) -->
+  <div id="toast" class="toast" role="status" aria-live="polite" aria-atomic="true"></div>
+
+  <!-- ─── Scripts loaded in dependency order ───────────────────────────────── -->
+  <script src="js/data.js"></script>
+  <script src="js/ip-checker.js"></script>
+  <script src="js/domain-checker.js"></script>
+  <script src="js/phone-tester.js"></script>
+  <script src="js/dashboard.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
