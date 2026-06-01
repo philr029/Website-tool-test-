@@ -51,7 +51,7 @@ jobs:
 
       # ── Run smoke test ─────────────────────────────────────────────────────
       - name: Run smoke test
-        run: node dist/runner.js --config "$SMOKE_CONFIG"
+        run: node dist/index.js --config "$SMOKE_CONFIG"
 
       # ── Upload artifacts ───────────────────────────────────────────────────
       - name: Upload reports and screenshots

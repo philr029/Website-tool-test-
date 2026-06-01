@@ -84,7 +84,7 @@
           "name": "Tick required Terms & Conditions checkbox",
           "fields": [
             {
-              "selector": "label:terms",
+              "selector": "label:I agree to the T&Cs",
               "type": "checkbox",
               "value": "true"
             }
