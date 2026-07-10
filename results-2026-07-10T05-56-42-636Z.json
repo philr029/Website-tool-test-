@@ -1,0 +1,39 @@
+{
+  "suiteName": "Default Smoke Test Suite",
+  "browser": "chromium",
+  "startedAt": "2026-07-10T05:56:42.636Z",
+  "finishedAt": "2026-07-10T05:57:43.091Z",
+  "durationMs": 60453,
+  "totals": {
+    "total": 1,
+    "pass": 0,
+    "fail": 1,
+    "manualCheckRequired": 0,
+    "partiallyLoaded": 0
+  },
+  "flows": [
+    {
+      "flowId": "page-load-check",
+      "flowName": "Example.com Page Load Check",
+      "tags": [
+        "smoke",
+        "page-load"
+      ],
+      "url": "https://example.com",
+      "status": "fail",
+      "steps": [
+        {
+          "stepIndex": 0,
+          "stepName": "Verify page content",
+          "status": "fail",
+          "message": "Expected text \"This domain is for use in illustrative examples\" not found after step \"Verify page content\"",
+          "screenshotPath": "/home/runner/work/Website-tool-test-/Website-tool-test-/screenshots/page-load-check-step0-fail-1783663063024.png",
+          "durationMs": 30057
+        }
+      ],
+      "startedAt": "2026-07-10T05:57:12.885Z",
+      "finishedAt": "2026-07-10T05:57:43.061Z",
+      "durationMs": 30176
+    }
+  ]
+}
