@@ -1,0 +1,2 @@
+flowId,flowName,url,status,tags,durationMs,startedAt,finishedAt,errorMessage,screenshotPath
+"page-load-check","Example.com Page Load Check","https://example.com","fail","smoke|page-load","30157","2026-07-16T04:53:56.984Z","2026-07-16T04:54:27.141Z","",""
