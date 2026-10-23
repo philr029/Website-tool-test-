@@ -1,0 +1,2 @@
+flowId,flowName,url,status,tags,durationMs,startedAt,finishedAt,errorMessage,screenshotPath
+"page-load-check","Example.com Page Load Check","https://example.com","manual-check-required","smoke|page-load","264","2026-10-23T06:47:12.932Z","2026-10-23T06:47:13.196Z","CAPTCHA detected — text pattern matched: /cloudflare/i","/home/runner/work/Website-tool-test-/Website-tool-test-/screenshots/page-load-check-captcha-1792738033137.png"

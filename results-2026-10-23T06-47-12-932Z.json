@@ -1,0 +1,32 @@
+{
+  "suiteName": "Default Smoke Test Suite",
+  "browser": "chromium",
+  "startedAt": "2026-10-23T06:47:12.932Z",
+  "finishedAt": "2026-10-23T06:47:13.229Z",
+  "durationMs": 297,
+  "totals": {
+    "total": 1,
+    "pass": 0,
+    "fail": 0,
+    "manualCheckRequired": 1,
+    "partiallyLoaded": 0
+  },
+  "flows": [
+    {
+      "flowId": "page-load-check",
+      "flowName": "Example.com Page Load Check",
+      "tags": [
+        "smoke",
+        "page-load"
+      ],
+      "url": "https://example.com",
+      "status": "manual-check-required",
+      "steps": [],
+      "screenshotPath": "/home/runner/work/Website-tool-test-/Website-tool-test-/screenshots/page-load-check-captcha-1792738033137.png",
+      "errorMessage": "CAPTCHA detected — text pattern matched: /cloudflare/i",
+      "startedAt": "2026-10-23T06:47:12.932Z",
+      "finishedAt": "2026-10-23T06:47:13.196Z",
+      "durationMs": 264
+    }
+  ]
+}
