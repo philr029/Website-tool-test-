@@ -1,0 +1,32 @@
+{
+  "suiteName": "Default Smoke Test Suite",
+  "browser": "chromium",
+  "startedAt": "2026-10-28T07:45:59.962Z",
+  "finishedAt": "2026-10-28T07:47:00.492Z",
+  "durationMs": 60530,
+  "totals": {
+    "total": 1,
+    "pass": 0,
+    "fail": 1,
+    "manualCheckRequired": 0,
+    "partiallyLoaded": 0
+  },
+  "flows": [
+    {
+      "flowId": "page-load-check",
+      "flowName": "Example.com Page Load Check",
+      "tags": [
+        "smoke",
+        "page-load"
+      ],
+      "url": "https://example.com",
+      "status": "fail",
+      "steps": [],
+      "screenshotPath": "/home/runner/work/Website-tool-test-/Website-tool-test-/screenshots/page-load-check-error-1793173620380.png",
+      "errorMessage": "Expected text \"Example Domain\" not found on page",
+      "startedAt": "2026-10-28T07:46:30.241Z",
+      "finishedAt": "2026-10-28T07:47:00.467Z",
+      "durationMs": 30226
+    }
+  ]
+}

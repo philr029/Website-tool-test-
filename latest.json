@@ -1,9 +1,9 @@
 {
   "suiteName": "TutorCare Daily Smoke Test",
   "browser": "chromium",
-  "startedAt": "2026-10-27T07:07:24.037Z",
-  "finishedAt": "2026-10-27T07:07:24.552Z",
-  "durationMs": 515,
+  "startedAt": "2026-10-28T07:47:00.559Z",
+  "finishedAt": "2026-10-28T07:47:01.282Z",
+  "durationMs": 723,
   "totals": {
     "total": 1,
     "pass": 0,
@@ -25,11 +25,11 @@
       "url": "https://tutorcare.co.uk",
       "status": "fail",
       "steps": [],
-      "screenshotPath": "/home/runner/work/Website-tool-test-/Website-tool-test-/screenshots/tutorcare-enquiry-form-error-1793084844479.png",
+      "screenshotPath": "/home/runner/work/Website-tool-test-/Website-tool-test-/screenshots/tutorcare-enquiry-form-error-1793173621223.png",
       "errorMessage": "Expected title to contain \"TutorCare\" but got \"403 Forbidden\"",
-      "startedAt": "2026-10-27T07:07:24.380Z",
-      "finishedAt": "2026-10-27T07:07:24.531Z",
-      "durationMs": 151
+      "startedAt": "2026-10-28T07:47:01.055Z",
+      "finishedAt": "2026-10-28T07:47:01.261Z",
+      "durationMs": 206
     }
   ]
 }
