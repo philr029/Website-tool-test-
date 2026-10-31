@@ -1,0 +1,35 @@
+{
+  "suiteName": "TutorCare Daily Smoke Test",
+  "browser": "chromium",
+  "startedAt": "2026-10-31T07:48:53.685Z",
+  "finishedAt": "2026-10-31T07:48:54.310Z",
+  "durationMs": 625,
+  "totals": {
+    "total": 1,
+    "pass": 0,
+    "fail": 1,
+    "manualCheckRequired": 0,
+    "partiallyLoaded": 0
+  },
+  "flows": [
+    {
+      "flowId": "tutorcare-enquiry-form",
+      "flowName": "TutorCare — Homepage Enquiry Form",
+      "tags": [
+        "smoke",
+        "tutorcare",
+        "daily",
+        "contact-form"
+      ],
+      "siteId": "tutorcare",
+      "url": "https://tutorcare.co.uk",
+      "status": "fail",
+      "steps": [],
+      "screenshotPath": "/home/runner/work/Website-tool-test-/Website-tool-test-/screenshots/tutorcare-enquiry-form-error-1793432934236.png",
+      "errorMessage": "Expected title to contain \"TutorCare\" but got \"403 Forbidden\"",
+      "startedAt": "2026-10-31T07:48:54.123Z",
+      "finishedAt": "2026-10-31T07:48:54.289Z",
+      "durationMs": 166
+    }
+  ]
+}
