@@ -1,0 +1,2 @@
+flowId,flowName,url,status,tags,durationMs,startedAt,finishedAt,errorMessage,screenshotPath
+"page-load-check","Example.com Page Load Check","https://example.com","fail","smoke|page-load","30260","2026-11-06T08:48:40.007Z","2026-11-06T08:49:10.267Z","Expected text \"Example Domain\" not found on page","/home/runner/work/Website-tool-test-/Website-tool-test-/screenshots/page-load-check-error-1793954950201.png"
